@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+    <script
+        src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
+        integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+        crossorigin="anonymous">
+    </script>
+    <title><%= meta.name %></title>
+    <meta charset="utf-8">
+    <meta name="application-name" content="<%= meta.name %>">
+    <meta name="robots" content="none, nofollow, noindex">
+    <link rel="stylesheet" href="/static/base.css">
+</head>
+<body>
+    <header>
+        <div id="title">
+            <h1 id="title-name"><%- meta.name %></h1>
+            <i id="title-version"><%- meta.version %></i>
+        </div>
+        <div id="login" class="flx row g-1">
+            <% if (session === undefined) { %>
+                <a class="btn tx-b" href="/login">Login</a>
+            <% } else { %>
+                <div class="box tx-b"><%= session.user_name %></div>
+                <button class="bg-red btn tx-b"
+                    hx-delete="/api/v1/users/auth"
+                    hx-target="#login"
+                    hx-swap="innerHTML">
+                    x
+                </button>
+            <% } %>
+        </div>
+    </header>
+    <main id="root" class="flx row s-center">
+        <nav id="nav" class="flx col m-start g-1"
+            hx-get="/htmx/v1/routes"
+            hx-trigger="ttv:reloadRoutes from:body"
+            hx-target="#nav"
+            hx-swap="innerHTML">
+            <%- include("elements/routes.ejs", { session: session }) %>
+        </nav>
+        <div id="subroot" class="flx col g-1">
+            <%- include(view) %>
+        </div>
+    </main>
+</body>

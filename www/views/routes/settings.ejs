@@ -1,0 +1,27 @@
+<form id="form_settings" class="cnt"
+    hx-put="/api/v1/settings"
+    hx-swap="none">
+    <section class="flx box col g-1"
+        hx-get="/htmx/v1/settings"
+        hx-trigger="load"
+        hx-swap="innerHTML">
+        <%- include("../elements/settings.ejs", {}) %>
+    </section>
+    <button class="btn tx-b" type="submit">Update Settings</button>
+</form>
+<section class="flx box col g-1">
+    <h3 class="tx-center">Twitch Client:</h3>
+    <form id="form_client" class="cnt"
+        hx-put="/api/v1/settings/client"
+        hx-swap="none">
+        <div class="flx col">
+            <label for="input_client_id">Twitch Client ID:</label>
+            <input id="input_client_id" type="text" name="client_id" required>
+        </div>
+        <div class="flx col">
+            <label for="input_client_secret">Twitch Client Secret:</label>
+            <input id="input_client_secret" type="password" name="client_secret" required>
+        </div>
+    </form>
+</section>
+<button class="btn tx-b" form="form_client">Update Twitch Client</button>

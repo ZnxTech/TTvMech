@@ -1,0 +1,187 @@
+
+@import "colors.css";
+
+/* Set global defaults */
+:root, * {
+    font-family: "JetBrainsMono", monospace;
+    margin: 0;
+    padding: 0;
+    
+    background: inherit;
+    color: inherit;
+    text-shadow: .15em .1em 0 var(--color-bg7);
+
+    scrollbar-width: none;
+    scrollbar-gutter: none;
+    
+    outline: none;
+    box-sizing: border-box;
+}
+
+/* Elements */
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg7);
+    color: var(--color-tx1);
+
+    overflow: hidden;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.25rem; }
+
+p { font-size: 1rem; }
+
+i {
+    color: var(--color-tx3);
+    font-size: 1rem;
+}
+
+button { font-size: 1rem; }
+
+header {
+    background: var(--color-bw5);
+    border-bottom: var(--color-bw4) solid 2px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: baseline;
+    padding: 1rem 2rem;
+    gap: 1rem;
+}
+
+label { user-select: none; }
+
+input:where(
+    [type=text],
+    [type=password],
+    [type=number],
+) {
+    flex: 1 1;
+    background: var(--color-bg7);
+    border: var(--color-bg4) solid 2px;
+
+    font-size: 1rem;
+    padding: 0.5rem;
+    caret-color: var(--color-tx1);
+}
+input:where(
+    [type=text],
+    [type=password],
+    [type=number],
+):hover {
+    background: var(--color-bg6);
+    border-color: var(--color-bg3);
+}
+input:where(
+    [type=text],
+    [type=password],
+    [type=number],
+):focus {
+    background: var(--color-bg7);
+    border-color: var(--color-bg3);
+}
+
+input:where(
+    [type=radio],
+) {
+    accent-color: var(--color-green3);
+    cursor: pointer;
+}
+
+/* Classes */
+
+.tx-i { font-style: italic; }
+.tx-b { font-weight: bold; }
+
+.tx-center { text-align: center; }
+.tx-left { text-align: left; }
+
+.row { flex-direction: row; }
+.col { flex-direction: column; }
+
+.m-center { justify-content: center; }
+.m-start { justify-content: start; }
+.m-end { justify-content: end; }
+.m-stretch { justify-content: stretch; }
+.m-around { justify-content: space-around; }
+.m-evenly { justify-content: space-evenly; }
+
+.x-center { align-items: center; }
+.x-start { align-items: start; }
+.x-end { align-items: end; }
+.x-stretch { align-items: stretch; }
+
+.s-center { align-self: center; }
+.s-start { align-self: start; }
+.s-end { align-self: end; }
+.s-stretch { align-self: stretch; }
+
+.g-1 { gap: 0.5rem; }
+.g-2 { gap: 1.0rem; }
+.g-3 { gap: 2.0rem; }
+
+.mrg-auto-left { margin-left: auto; }
+.mrg-auto-right { margin-right: auto; }
+.mrg-auto-top { margin-top: auto; }
+.mrg-auto-bottom { margin-bottom: auto; }
+
+.cnt { display: contents; }
+
+.flx { display: flex; }
+
+.box {
+    background: var(--color-bg5);
+    border: var(--color-bg4) solid 2px;
+
+    padding: 0.5rem;
+}
+.box-inv {
+    background: var(--color-bg6);
+    border: var(--color-bg4) solid 2px;
+
+    padding: 0.5rem;
+}
+
+.btn {
+    background: var(--color-bg5);
+    border: var(--color-bg4) solid 2px;
+
+    padding: 0.5rem;
+
+    text-decoration: none;
+    user-select: none;
+}
+.btn:hover {
+    background: var(--color-bg4);
+    border-color: var(--color-bg3);
+    cursor: pointer;
+}
+.btn:active {
+    background: var(--color-bg3);
+    border-color: var(--color-bg2);   
+}
+
+/* Special IDs */
+
+#title {
+    flex-shrink: 0;
+    margin-right: auto;
+
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+#title-name {
+    flex-shrink: 0;
+}
+
+#title-version {
+    flex-shrink: 0;
+    margin-left: 0.5em;
+}

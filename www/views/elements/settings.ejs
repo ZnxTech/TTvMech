@@ -1,0 +1,37 @@
+<h3 class="tx-center">Settings:</h3>
+<div class="flx col">
+    <label for="cmd_prefix">Command Prefix:</label>
+    <input id="cmd_prefix" type="text" name="cmd_prefix" required
+        <% if (settings) { %>
+            value="<%= settings.cmd_prefix %>"
+        <% } %>
+        >
+    <i>The prefix for triggering commands. for e.g. "!", "$", "cmd!".</i>
+</div>
+<div class="flx col">
+    <label for="root_path">Root Path:</label>
+    <input id="root_path" type="text" name="root_path" required
+        <% if (settings) { %>
+            value="<%= settings.root_path %>"
+        <% } %>
+        >
+    <i>Root path to serve. (changes only after restart)</i>
+</div>
+<div class="flx col">
+    <label for="mod_score">Mod Score:</label>
+    <input id="mod_score" type="number" name="mod_score" required
+        <% if (settings) { %>
+            value="<%= settings.mod_score %>"
+        <% } %>
+        >
+    <i>Users with permission score higher than this will be considered a moderator.</i>
+</div>
+<div class="flx col">
+    <label for="ban_score">Ban Score:</label>
+    <input id="ban_score" type="number" name="ban_score" required
+        <% if (settings) { %>
+            value="<%= settings.ban_score %>"
+        <% } %>
+        >
+    <i>Users with permission score lower than this will be considered banned.</i>
+</div>

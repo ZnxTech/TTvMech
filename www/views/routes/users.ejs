@@ -1,0 +1,35 @@
+<form class="cnt"
+    hx-post="/api/v1/users"
+    hx-swap="none">
+    <section class="flx box col g-1">
+        <h3 class="s-center">Create User:</h3>
+        <div class="flx col">
+            <label for="input_user_name">Username:</label>
+            <input id="input_user_name" type="text" name="user_name" required>
+        </div>
+        <div class="flx col">
+            <label for="input_user_pass">Password:</label>
+            <input id="input_user_pass" type="password" name="user_pass" required>
+        </div>
+        <div class="flx row g-2">
+            <label for="input_none">
+                <input id="input_none" type="radio" name="user_rank" value="none" required checked>
+                None
+            </label>
+            <label for="input_admin">
+                <input id="input_admin" type="radio" name="user_rank" value="admin" required>
+                Admin
+            </label>
+            <label for="input_super_admin">
+                <input id="input_super_admin" type="radio" name="user_rank" value="super_admin" required>
+                Super-Admin
+            </label>
+        </div>
+    </section>
+    <button class="btn tx-b" type="submit">Submit</button>
+</form>
+<div class="cnt"
+    hx-get="/htmx/v1/users"
+    hx-trigger="load, ttv:reloadUsers from:body"
+    hx-swap="innerHTML">
+</div>

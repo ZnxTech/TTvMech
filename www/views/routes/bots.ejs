@@ -1,0 +1,10 @@
+<button class="btn tx-b tx-center"
+    hx-get="/api/v1/bots/twitch/link"
+    hx-swap="none">
+    Add a Twitch Bot (OAuth)
+</button>
+<form class="cnt"
+    hx-get="/htmx/v1/bots"
+    hx-trigger="load, ttv:reloadBots from:body"
+    hx-swap="innerHTML">
+</form>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <script
+        src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" 
+        integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+        crossorigin="anonymous">
+    </script>
+    <title><%- meta.name %></title>
+    <meta charset="utf-8">
+    <meta name="application-name" content="<%- meta.name %>">
+    <meta name="robots" content="none, nofollow, noindex">
+    <link rel="stylesheet" href="/static/init.css">
+</head>
+<body>
+    <header>
+        <div id="title">
+            <h1 id="title-name"><%- meta.name %></h1>
+            <i id="title-version"><%- meta.version %></i>
+        </div>
+    </header>
+    <main id="root" class="flx col s-center g-1">
+        <form class="cnt"
+            hx-post="/api/v1/meta/init"
+            hx-swap="none">
+            <section class="flx box col x-stretch g-1">
+                <h2 class="s-center">Initial Setup:</h2>
+                <div class="flx col">
+                    <label>Twitch Client ID:</label>
+                    <input name="client_id" type="text" required>
+                </div>
+                <div class="flx col">
+                    <label>Twitch Client secret:</label>
+                    <input name="client_secret" type="password" required>
+                </div>
+                <div class="flx col">
+                    <label>Admin Username:</label>
+                    <input name="admin_name" type="text" required>
+                </div>
+                <div class="flx col">
+                    <label>Admin Password:</label>
+                    <input name="admin_pass" type="password" required>
+                </div>
+            </section>
+            <button class="btn tx-b" type="submit">Submit</button>
+        </form>
+    </main>
+</body>

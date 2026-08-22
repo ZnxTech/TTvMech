@@ -1,0 +1,15 @@
+<a class="btn tx-b" href="/dashboard">/dashboard</a>
+<a class="btn tx-b" href="/manual">/manual</a>
+<% if (session !== undefined) { %>
+    <% if (session.is_admin) { %>
+        <a class="btn tx-b" href="/commands">/commands</a>
+        <a class="btn tx-b" href="/plugins">/plugins</a>
+        <a class="btn tx-b" href="/channels">/channels</a>
+        <a class="btn tx-b" href="/bots">/bots</a>
+    <% } %>
+    <% if (session.is_super_admin) { %>
+        <a class="btn tx-b" href="/settings">/settings</a>
+        <a class="btn tx-b" href="/users">/users</a>
+        <a class="btn tx-b" href="/system">/system</a>
+    <% } %>
+<% } %>

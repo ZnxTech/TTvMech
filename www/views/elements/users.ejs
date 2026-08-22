@@ -1,0 +1,17 @@
+<% for (user of users) { %>
+    <div id="user-<%= user.uuid %>" class="flx box row m-start g-1">
+        <div class="box tx-b"><%= user.name %></div>
+        <i class="box mrg-auto-right"><%= user.uuid %></i>
+        <% if (user.is_super_admin) { %>
+            <div class="bg-green box tx-b">Super-Admin</div>
+        <% } else if (user.is_admin) { %>
+            <div class="bg-green box tx-b">Admin</div>
+        <% } %>
+        <div class="bg-red btn tx-b"
+            hx-delete="/api/v1/users/<%= user.uuid %>"
+            hx-target="#user-<%= user.uuid %>"
+            hx-swap="delete">
+            Delete
+        </div>
+    </div>
+<% } %>
