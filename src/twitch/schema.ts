@@ -34,6 +34,118 @@ export namespace AuthSchemas {
     });
 }
 
+export namespace APISchemas {
+
+    const EVENTSUB_TRANSPORT_WEBSOCKET = Z.object({
+        method: Z.literal("websocket"),
+        session_id: Z.string(),
+        connected_at: Z.iso.datetime(),
+    });
+
+    const EVENTSUB_TRANSPORT_WEBHOOK = Z.object({
+        method: Z.literal("webhook"),
+        callback: Z.url(),
+    });
+
+    const EVENTSUB_TRANSPORT_CONDUIT = Z.object({
+        method: Z.literal("conduit"),
+        conduit_id: Z.string(),
+    });
+
+    const EVENTSUB_TRANSPORT = Z.xor([
+        EVENTSUB_TRANSPORT_WEBSOCKET,
+        EVENTSUB_TRANSPORT_WEBHOOK,
+        EVENTSUB_TRANSPORT_CONDUIT,
+    ]);
+
+    const CREATE_EVENTSUB_SUB = Z.object({
+        id: Z.string(),
+        status: Z.enum([
+            "enabled",
+            "webhook_callback_verification_pending",
+        ]),
+        type: Z.string(),
+        version: Z.string(),
+        condition: Z.unknown(),
+        created_at: Z.iso.datetime(),
+        transport: EVENTSUB_TRANSPORT,
+        cost: Z.number(),
+    });
+
+    export const CREATE_EVENTSUB = Z.object({
+        data: CREATE_EVENTSUB_SUB.array(),
+        total: Z.number(),
+        total_cost: Z.number(),
+        max_total_cost: Z.number(),
+    });
+
+    const GET_EVENTSUB_SUB = Z.object({
+        id: Z.string(),
+        status: Z.enum([
+            "enabled",
+            "webhook_callback_verification_pending",
+            "webhook_callback_verification_failed",
+            "notification_failures_exceeded",
+            "authorization_revoked",
+            "moderator_removed",
+            "user_removed",
+            "chat_user_banned",
+            "beta_maintenance",
+            "websocket_disconnected",
+            "websocket_failed_ping_pong",
+            "websocket_received_inbound_traffic",
+            "websocket_connection_unused",
+            "websocket_internal_error",
+            "websocket_network_timeout",
+            "websocket_network_error",
+        ]),
+        type: Z.string(),
+        version: Z.string(),
+        condition: Z.unknown(),
+        created_at: Z.iso.datetime(),
+        transport: EVENTSUB_TRANSPORT,
+        cost: Z.number(),
+    });
+
+    export const GET_EVENTSUB = Z.object({
+        data: GET_EVENTSUB_SUB.array(),
+        total: Z.number(),
+        total_cost: Z.number(),
+        max_total_cost: Z.number(),
+        pagination: Z.object({
+            cursor: Z.string().optional(),
+        }),
+    });
+
+    const GET_USERS_USER = Z.object({
+        id: Z.string(),
+        login: Z.string(),
+        display_name: Z.string(),
+        type: Z.enum([
+            "admin",
+            "global_mod",
+            "staff",
+            "",
+        ]),
+        broadcaster_type: Z.enum([
+            "affiliate",
+            "partner",
+            "",
+        ]),
+        description: Z.string(),
+        profile_image_url: Z.url(),
+        offline_image_url: Z.url(),
+        view_count: Z.number(),
+        email: Z.string().optional(),
+        created_at: Z.iso.datetime(),
+    });
+
+    export const GET_USERS = Z.object({
+        data: GET_USERS_USER.array(),
+    });
+
+}
+
 export namespace WebSocketSchemas {
 
     export const META = Z.object({
@@ -261,5 +373,5 @@ export namespace EventSubSchemas {
             info: Z.string(),
         })),
         is_source_only: Z.boolean().optional(),
-    })
+    });
 }
