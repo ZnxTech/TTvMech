@@ -1,7 +1,7 @@
 
 import Z from "zod";
 
-import { AuthSchemas } from "./schema.js";
+import { AuthSchemas, APISchemas } from "./schema.js";
 
 export class Auth {
     protected constructor(
@@ -149,6 +149,241 @@ export class BotAuth extends Auth {
     }
 }
 
-export namespace API.Helix {
-    
+export namespace Helix {
+
+    // Ref: https://dev.twitch.tv/docs/api/reference/#send-chat-message
+    export async function sendChatMessage<A extends Auth>(auth: A, data: {
+        broadcaster_id: string,
+        sender_id: string,
+        message: string,
+        reply_parent_message_id?: string,
+        for_source_only?: boolean,
+        pin?: boolean,
+    }): Promise<Z.infer<typeof APISchemas.SEND_CHAT_MESSAGE>> {
+        const res = await fetch("https://api.twitch.tv/helix/chat/messages", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${auth.token()}`,
+                "Client-Id": auth.clientId(),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to send chat message");
+        }
+
+        const json = APISchemas.SEND_CHAT_MESSAGE.safeParse(res.body);
+        if (json.success) {
+            return json.data;
+        } else {
+            throw new Error("Invalid send chat message json recived");
+        }
+    }
+
+    type EventSubTransportWebSocket = {
+        method: "websocket";
+        session_id: string;
+    };
+
+    type EventSubTransportWebHook = {
+        method: "webhook";
+        callback: string;
+        secret: string;
+    };
+
+    type EventSubTransportConduit = {
+        method: "conduit";
+        conduit_id: string;
+    };
+
+    export type EventSubTransport =
+          EventSubTransportWebSocket
+        | EventSubTransportWebHook
+        | EventSubTransportConduit;
+
+    // Ref: https://dev.twitch.tv/docs/api/reference/#create-eventsub-subscription
+    export async function createEventSub<A extends Auth>(auth: A, data: {
+        type: string,
+        version: string,
+        condition: any,
+        transport: EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        const res = await fetch("https://api.twitch.tv/helix/eventsub/subscriptions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${auth.token()}`,
+                "Client-Id": auth.clientId(),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to create an EventSub");
+        }
+
+        const json = APISchemas.CREATE_EVENTSUB.safeParse(res.body);
+        if (json.success) {
+            return json.data;
+        } else {
+            throw new Error("Invalid EventSub json recived");
+        }
+    }
+
+    // Ref: https://dev.twitch.tv/docs/api/reference/#delete-eventsub-subscription
+    export async function deleteEventSub<A extends Auth>(auth: A, data: {
+        id: string,
+    }) {
+        const url = new URL("https://api.twitch.tv/helix/eventsub/subscriptions");
+        url.searchParams.append("id", data.id);
+
+        const res = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${auth.token()}`,
+                "Client-Id": auth.clientId(),
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to delete an EventSub");
+        }
+    }
+
+    // Ref: https://dev.twitch.tv/docs/api/reference/#get-eventsub-subscriptions
+    export async function getEventSubs<A extends Auth>(auth: A, data: {
+        type?: string,
+        user_id?: string,
+        subscription_id?: string,
+        conduit_id?: string,
+        after?: string,
+    }): Promise<Z.infer<typeof APISchemas.GET_EVENTSUB>> {
+        const res = await fetch("https://api.twitch.tv/helix/eventsub/subscriptions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${auth.token()}`,
+                "Client-Id": auth.clientId(),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to get EventSubs");
+        }
+
+        const json = APISchemas.GET_EVENTSUB.safeParse(res.body);
+        if (json.success) {
+            return json.data;
+        } else {
+            throw new Error("Invalid EventSub json recived");
+        }
+    }
+
+    // Ref: https://dev.twitch.tv/docs/api/reference/#get-users
+    export async function getUsers<A extends Auth>(auth: A, data: {
+        ids?: string[],
+        logins?: string[],
+    }): Promise<Z.infer<typeof APISchemas.GET_USERS>> {
+        const body = new URLSearchParams();
+        data.ids?.forEach(id => body.append("id", id));
+        data.logins?.forEach(login => body.append("login", login));
+
+        const res = await fetch("https://api.twitch.tv/helix/users", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${auth.token()}`,
+                "Client-Id": auth.clientId(),
+            },
+            body: body,
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to get users");
+        }
+
+        const json = APISchemas.GET_USERS.safeParse(res.body);
+        if (json.success) {
+            return json.data;
+        } else {
+            throw new Error("Invalid users json recived");
+        }
+    }
+}
+
+export namespace EventSub {
+
+    export async function channelUpdate<A extends Auth>(auth: A, data: {
+        condition: {
+            broadcaster_user_id: string,
+        },
+        transport: Helix.EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        return await Helix.createEventSub(auth, {
+            type: "channel.update",
+            version: "2",
+            condition: data.condition,
+            transport: data.transport,
+        });
+    }
+
+    export async function channelChatMessage<A extends Auth>(auth: A, data: {
+        condition: {
+            broadcaster_user_id: string,
+            user_id: string,
+        },
+        transport: Helix.EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        return await Helix.createEventSub(auth, {
+            type: "channel.chat.message",
+            version: "1",
+            condition: data.condition,
+            transport: data.transport,
+        });
+    }
+
+    export async function streamOnline<A extends Auth>(auth: A, data: {
+        condition: {
+            broadcaster_user_id: string,
+        },
+        transport: Helix.EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        return await Helix.createEventSub(auth, {
+            type: "stream.online",
+            version: "1",
+            condition: data.condition,
+            transport: data.transport,
+        });
+    }
+
+    export async function streamOffline<A extends Auth>(auth: A, data: {
+        condition: {
+            broadcaster_user_id: string,
+        },
+        transport: Helix.EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        return await Helix.createEventSub(auth, {
+            type: "stream.offline",
+            version: "1",
+            condition: data.condition,
+            transport: data.transport,
+        });
+    }
+
+    export async function userWhisperRecived<A extends Auth>(auth: A, data: {
+        condition: {
+            user_id: string,
+        },
+        transport: Helix.EventSubTransport,
+    }): Promise<Z.infer<typeof APISchemas.CREATE_EVENTSUB>> {
+        return await Helix.createEventSub(auth, {
+            type: "user.whisper.message",
+            version: "1",
+            condition: data.condition,
+            transport: data.transport,
+        });
+    }
+
 }
