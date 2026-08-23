@@ -10,6 +10,10 @@ export class Auth {
         protected expires_at: Date,
     ) {}
 
+    public clientId(): string {
+        return this.client_id;
+    }
+
     public token(): string {
         return this.access_token;
     }
