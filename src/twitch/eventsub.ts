@@ -5,17 +5,22 @@ import Twitch from "../twitch.js";
 
 import { WebSocketSchemas } from "./schema.js";
 
+export type EventSubWebSocketSession = {
+    id: string,
+    total: number,
+    total_cost: number,
+    total_max_cost: number,
+};
+
 export class EventSubWebSocket {
 
     private ws?: WebSocket;
     private ws_old?: WebSocket;
 
-    private first_welcome: boolean = true;
-
     private event_listeners: { type: string, callback: (ev: unknown) => void }[] = [];
-    private welcome_listeners: { callback: (ev: Z.infer<typeof WebSocketSchemas.WELCOME>) => void }[] = [];
-    private keepalive_listeners: { callback: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void }[] = [];
-    private close_listeners: { callback: (code: number) => void }[] = [];
+    private welcome_listener: (ev: Z.infer<typeof WebSocketSchemas.WELCOME>) => void = () => {};
+    private keepalive_listener: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void = () => {};
+    private close_listener: (code: number) => void = () => {};
 
     public constructor() {}
 
@@ -26,22 +31,16 @@ export class EventSubWebSocket {
         });
     }
 
-    public addWelcomeListener(callback: (ev: Z.infer<typeof WebSocketSchemas.WELCOME>) => void) {
-        this.welcome_listeners.push({ 
-            callback: callback
-        });
+    public setWelcomeListener(callback: (ev: Z.infer<typeof WebSocketSchemas.WELCOME>) => void) {
+        this.welcome_listener = callback;
     }
 
-    public addKeepaliveListener(callback: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void) {
-        this.keepalive_listeners.push({ 
-            callback: callback
-        });
+    public setKeepaliveListener(callback: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void) {
+        this.keepalive_listener = callback;
     }
 
-    public addCloseListener(callback: (code: number) => void) {
-        this.close_listeners.push({ 
-            callback: callback
-        });
+    public setCloseListener(callback: (code: number) => void) {
+        this.close_listener = callback;
     }
 
     private onWelcome(ev: MessageEvent) {
@@ -51,12 +50,8 @@ export class EventSubWebSocket {
             return;
         }
 
-        if (this.first_welcome) {
-            this.welcome_listeners.forEach((listener) => {
-                listener.callback(json.data);
-            });
-            this.first_welcome = false;
-        }
+        this.welcome_listener(ev.data);
+        this.welcome_listener = () => {};
 
         // When reconnecting, close the old WebSocket only after
         // the welcome message of the new WebSocket. 
@@ -73,9 +68,7 @@ export class EventSubWebSocket {
             return;
         }
 
-        this.keepalive_listeners.forEach((listener) => {
-            listener.callback(json.data);
-        });
+        this.keepalive_listener(ev.data);
     }
 
     private onNotification(ev: MessageEvent) {
@@ -152,9 +145,7 @@ export class EventSubWebSocket {
         });
 
         this.ws.addEventListener("close", (ev) => {
-            this.close_listeners.forEach((listener) => {
-                listener.callback(ev.code);
-            })
+            this.close_listener(ev.code);
         });
     }
 
