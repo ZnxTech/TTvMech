@@ -36,6 +36,27 @@ export namespace AuthSchemas {
 
 export namespace APISchemas {
 
+    const SEND_CHAT_MESSAGE_OK = Z.object({
+        message_id: Z.string(),
+        is_sent: Z.literal(true),
+    });
+
+    const SEND_CHAT_MESSAGE_ERR = Z.object({
+        message_id: Z.string(),
+        is_sent: Z.literal(false),
+        drop_reason: Z.object({
+            code: Z.string(),
+            message: Z.string(),
+        }),
+    });
+
+    export const SEND_CHAT_MESSAGE = Z.object({
+        data: Z.xor([
+            SEND_CHAT_MESSAGE_OK,
+            SEND_CHAT_MESSAGE_ERR,
+        ]),
+    });
+
     const EVENTSUB_TRANSPORT_WEBSOCKET = Z.object({
         method: Z.literal("websocket"),
         session_id: Z.string(),
@@ -373,5 +394,27 @@ export namespace EventSubSchemas {
             info: Z.string(),
         })),
         is_source_only: Z.boolean().optional(),
+    });
+
+    export const STREAM_ONLINE = Z.object({
+        id: Z.string(),
+        broadcaster_user_id: Z.string(),
+        broadcaster_user_login: Z.string(),
+        broadcaster_user_name: Z.string(),
+        type: Z.enum([
+            "live",
+            "playlist",
+            "watch_party",
+            "premiere",
+            "rerun",
+        ]),
+        started_at: Z.iso.datetime(),
+    });
+
+    export const STREAM_OFFLINE = Z.object({
+        id: Z.string(),
+        broadcaster_user_id: Z.string(),
+        broadcaster_user_login: Z.string(),
+        broadcaster_user_name: Z.string(),
     });
 }
