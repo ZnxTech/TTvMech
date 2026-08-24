@@ -22,6 +22,14 @@ export class Auth {
         return this.expires_at <= new Date();
     }
 
+    public expiresAt(): Date {
+        return new Date(this.expires_at);
+    }
+
+    public expiresIn(): number {
+        return this.expires_at.getTime();
+    }
+
     public async validate(): Promise<Z.infer<typeof AuthSchemas.AUTH_VALIDATE>> {
         const res = await fetch("https://id.twitch.tv/oauth2/validate", {
             method: "GET",
@@ -94,6 +102,14 @@ export class BotAuth extends Auth {
         private scopes: string[],
         expires_at: Date,
     ) { super(client_id, access_token, expires_at) }
+
+    public refreshToken(): string {
+        return this.refresh_token;
+    }
+
+    public scope(): string[] {
+        return [...this.scopes];
+    }
 
     static async request(client_id: string, client_secret: string, access_code: string, redirect_uri: string): Promise<BotAuth> {
         const res = await fetch("https://id.twitch.tv/oauth2/token", {
