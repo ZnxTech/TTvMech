@@ -9,7 +9,8 @@ import Auth from "./auth.js";
 import { tables } from "./db_schema.js";
 import { db, Util as DBUtil } from "./db.js";
 import Meta from "./meta.js";
-import Twitch from "./twitch.js";
+
+import { BotAuth } from "./twitch/api.js";
 
 export namespace API.V1 {
     export const ROUTER = Express.Router();
@@ -292,13 +293,40 @@ export namespace API.V1 {
             return res.redirect(307, `/bots?${query_str}`);
         }
 
-        const bot_token = Twitch.requestUserToken(
+        const auth = await BotAuth.request(
             settings.client_id,
             settings.client_secret,
             query.data.code,
             `${req.protocol}://${req.host}${req.path}`
         );
 
+        const validation = await auth.validate();
+
+        const sql_res = db
+            .insert(tables.twitch_bots)
+            .values({
+                twitch_id: validation.user_id,
+                twitch_dname: validation.login,
+                twitch_uname: validation.login,
+                twitch_access_token: auth.token(),
+                twitch_refresh_token: auth.refreshToken(),
+                twitch_scopes: auth.scope().join(","),
+                expire_unix_ms: auth.expiresAt(),
+            })
+            .onConflictDoUpdate({
+                target: tables.twitch_bots.twitch_id,
+                set: {
+                    twitch_dname: validation.login,
+                    twitch_uname: validation.login,
+                    twitch_access_token: auth.token(),
+                    twitch_refresh_token: auth.refreshToken(),
+                    twitch_scopes: auth.scope().join(","),
+                    expire_unix_ms: auth.expiresAt(),
+                }
+            })
+            .run();
+
+        res.redirect(307, "/bots");
     });
 
     ROUTER.route("/bots/twitch/link")
