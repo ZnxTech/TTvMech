@@ -146,6 +146,7 @@ export class EventSubWebSocket {
 
         this.ws.addEventListener("close", (ev) => {
             this.close_listener(ev.code);
+            this.close_listener = () => {};
         });
     }
 
