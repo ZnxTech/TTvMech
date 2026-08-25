@@ -20,6 +20,7 @@ export class EventSubWebSocket {
     private event_listeners: { type: string, callback: (ev: unknown) => void }[] = [];
     private welcome_listener: (ev: Z.infer<typeof WebSocketSchemas.WELCOME>) => void = () => {};
     private keepalive_listener: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void = () => {};
+    private revocation_listener: (ev: Z.infer<typeof WebSocketSchemas.REVOCATION>) => void = () => {};
     private close_listener: (code: number) => void = () => {};
 
     public constructor() {}
@@ -37,6 +38,10 @@ export class EventSubWebSocket {
 
     public setKeepaliveListener(callback: (ev: Z.infer<typeof WebSocketSchemas.KEEPALIVE>) => void) {
         this.keepalive_listener = callback;
+    }
+
+    public setRevocationListener(callback: (ev: Z.infer<typeof WebSocketSchemas.REVOCATION>) => void) {
+        this.revocation_listener = callback;
     }
 
     public setCloseListener(callback: (code: number) => void) {
@@ -103,7 +108,11 @@ export class EventSubWebSocket {
     private onRevocation(ev: MessageEvent) {
         const json = WebSocketSchemas.REVOCATION.safeParse(ev.data);
 
-        
+        if (!json.success) {
+            return;
+        }
+
+        this.revocation_listener(json.data);
     }
 
     public connect(url?: URL) {
