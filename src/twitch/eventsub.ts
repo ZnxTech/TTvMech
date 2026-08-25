@@ -68,7 +68,7 @@ export class EventSubWebSocket {
             return;
         }
 
-        this.keepalive_listener(ev.data);
+        this.keepalive_listener(json.data);
     }
 
     private onNotification(ev: MessageEvent) {
