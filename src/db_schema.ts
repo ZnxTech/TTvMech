@@ -57,6 +57,7 @@ export const table_twitch_bots = sqliteTable("twitch_bots", (t) => ({
     twitch_access_token:  t.text().notNull(),
     twitch_refresh_token: t.text().notNull(),
     expire_unix_ms:       t.integer({ mode: "timestamp_ms" }).notNull(),
+    faulty:               t.integer({ mode: "boolean" }).notNull(),
 }));
 
 export const table_twitch_channels = sqliteTable("twitch_channels", (t) => ({

@@ -312,6 +312,7 @@ export namespace API.V1 {
                 twitch_refresh_token: auth.refreshToken(),
                 twitch_scopes: auth.scope().join(","),
                 expire_unix_ms: auth.expiresAt(),
+                faulty: false,
             })
             .onConflictDoUpdate({
                 target: tables.twitch_bots.twitch_id,
@@ -322,6 +323,7 @@ export namespace API.V1 {
                     twitch_refresh_token: auth.refreshToken(),
                     twitch_scopes: auth.scope().join(","),
                     expire_unix_ms: auth.expiresAt(),
+                    faulty: false,
                 }
             })
             .run();
