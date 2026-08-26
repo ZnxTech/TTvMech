@@ -1,8 +1,6 @@
 
 import Z from "zod";
 
-import Twitch from "../twitch.js";
-
 import { WebSocketSchemas } from "./schema.js";
 
 export type EventSubWebSocketSession = {
