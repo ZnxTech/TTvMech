@@ -94,7 +94,7 @@ export namespace APISchemas {
     });
 
     export const CREATE_EVENTSUB = Z.object({
-        data: CREATE_EVENTSUB_SUB.array(),
+        data: Z.tuple([CREATE_EVENTSUB_SUB]),
         total: Z.number(),
         total_cost: Z.number(),
         max_total_cost: Z.number(),
@@ -304,7 +304,7 @@ export namespace EventSubSchemas {
             id: Z.string(),
             emote_set_id: Z.string(),
             owner_id: Z.string(),
-            format: Z.string().array(),
+            format: Z.enum(["animated", "static"]).array(),
         }),
         mention: Z.null(),
         gif: Z.null(),
