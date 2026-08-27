@@ -107,13 +107,13 @@ export class TwitchBot {
             this.eventsub_ws.connect();
         });
 
-        const eventsubs = await Helix.getEventSubs(await this.getAuth(), {});
+        const eventsub_status = await Helix.getEventSubs(await this.getAuth(), {});
 
         this.eventsub_ws_session = {
             id: eventsub_ws_id,
-            total: eventsubs.total,
-            total_cost: eventsubs.total_cost,
-            total_max_cost: eventsubs.max_total_cost,
+            total: eventsub_status.total,
+            total_cost: eventsub_status.total_cost,
+            total_max_cost: eventsub_status.max_total_cost,
         };
 
         return this.eventsub_ws_session;
@@ -174,6 +174,9 @@ export class TwitchBot {
             ]);
 
             for (const sub of subs) {
+                session.total = sub.total;
+                session.total_cost = sub.total_cost;
+                session.total_max_cost = sub.max_total_cost;
                 join.subs.push(sub.data[0].id)
             }
 
@@ -193,6 +196,12 @@ export class TwitchBot {
             await Promise.all(join.subs.map((sub) => {
                 return Helix.deleteEventSub(auth, { id: sub });
             }));
+
+            const session = await this.getEventSubSession();
+            const eventsub_status = await Helix.getEventSubs(await this.getAuth(), {});
+            session.total = eventsub_status.total;
+            session.total_cost = eventsub_status.total_cost;
+            session.total_max_cost = eventsub_status.max_total_cost;
 
             this.joins.delete(broadcaster_id);
         } catch {
