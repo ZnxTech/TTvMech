@@ -1,17 +1,13 @@
-// Backend configs
 {
   "compilerOptions": {
-    // Environment setup & latest features
-    "lib": ["esnext", "DOM"],
+    "lib": ["esnext"],
     "target": "esnext",
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "moduleDetection": "force",
     "types": ["node"],
-
     "outDir": "dist",
 
-    // Best practices
     "strict": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,

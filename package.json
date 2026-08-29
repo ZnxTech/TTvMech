@@ -4,8 +4,10 @@
   "module": "main.ts",
   "type": "module",
   "scripts": {
-    "prestart": "tsc --noEmit && drizzle-kit migrate",
-    "start": "tsx main.ts"
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "prestart": "tsc --build && drizzle-kit migrate",
+    "start": "node dist/main.js"
   },
   "private": true,
   "dependencies": {
