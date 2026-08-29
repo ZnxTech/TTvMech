@@ -70,10 +70,6 @@ export class TwitchBot {
         });
     }
 
-    public close() {
-        this.eventsub_ws.close();
-    }
-
     private async getAuth(): Promise<BotAuth> {
         if (this.auth.expired()) {
             const settings = db
@@ -213,5 +209,9 @@ export class TwitchBot {
         } catch {
             this.error_listener(this, new Error(`Failed to part Twitch channel ${broadcaster_id}`));
         }
+    }
+
+    public close() {
+        this.eventsub_ws.close();
     }
 }
