@@ -111,7 +111,8 @@ export class TwitchBot {
             this.eventsub_ws.connect();
         });
 
-        const eventsub_status = await Helix.getEventSubs(await this.getAuth(), {});
+        const auth = await this.getAuth();
+        const eventsub_status = await Helix.getEventSubs(auth, {});
 
         this.eventsub_ws_session = {
             id: eventsub_ws_id,
