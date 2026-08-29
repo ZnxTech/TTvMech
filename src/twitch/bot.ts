@@ -12,6 +12,12 @@ import { EventSubWebSocket, EventSubWebSocketSession } from "./eventsub.js";
 const MESSAGES_PER_30S = 20;
 const MESSAGES_PER_30S_MODDED = 100;
 
+type BotJoin = {
+    is_online: boolean,
+    is_offline_only: boolean,
+    eventsub_subs: string[],
+};
+
 export class TwitchBot {
 
     private auth: BotAuth;
@@ -20,10 +26,7 @@ export class TwitchBot {
     private eventsub_ws: EventSubWebSocket;
     private eventsub_ws_session: EventSubWebSocketSession | null;
 
-    private joins: Map<string, {
-        is_online: boolean,
-        subs: string[],
-    }>;
+    private joins: Map<string, BotJoin>;
 
     private message_listener: (bot: TwitchBot, message: Z.infer<typeof EventSubSchemas.CHANNEL_CHAT_MESSAGE>) => void = () => {};
     private error_listener: (bot: TwitchBot, error: Error) => void = () => {};
@@ -40,8 +43,15 @@ export class TwitchBot {
 
             if (message.success) {
                 const join = this.joins.get(message.data.broadcaster_user_id);
+                if (join === undefined) {
+                    // Recived message from a channel that the bot did not join to, ignore.
+                    return;
+                }
 
-                // TODO: check from offline_only in DB act accordingly
+                if (join.is_offline_only && join.is_online) {
+                    // Dont proccess message if the channel is online/live and is set to offline only.
+                    return;
+                }
 
                 this.message_listener(this, message.data);
             }
@@ -148,7 +158,7 @@ export class TwitchBot {
         }
     }
 
-    public async join(broadcaster_id: string) {
+    public async join(broadcaster_id: string, offline_only: boolean) {
         if (this.joins.get(broadcaster_id) !== undefined) {
             // Already joined, no need to duplicate EventSub subs
             return;
@@ -157,7 +167,12 @@ export class TwitchBot {
         try {
             const session = await this.getEventSubSession();
             const auth = await this.getAuth();
-            const join: { is_online: boolean, subs: string[] } = { is_online: true, subs: [] };
+            const join: BotJoin = {
+                is_online: true,
+                is_offline_only: offline_only,
+                eventsub_subs: []
+            };
+
             this.joins.set(broadcaster_id, join);
 
             const subs = await Promise.all([
@@ -179,7 +194,7 @@ export class TwitchBot {
                 session.total = sub.total;
                 session.total_cost = sub.total_cost;
                 session.total_max_cost = sub.max_total_cost;
-                join.subs.push(sub.data[0].id)
+                join.eventsub_subs.push(sub.data[0].id)
             }
 
         } catch {
@@ -195,7 +210,7 @@ export class TwitchBot {
             }
 
             const auth = await this.getAuth();
-            await Promise.all(join.subs.map((sub) => {
+            await Promise.all(join.eventsub_subs.map((sub) => {
                 return Helix.deleteEventSub(auth, { id: sub });
             }));
 
