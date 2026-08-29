@@ -70,6 +70,10 @@ export class TwitchBot {
         });
     }
 
+    public close() {
+        this.eventsub_ws.close();
+    }
+
     private async getAuth(): Promise<BotAuth> {
         if (this.auth.expired()) {
             const settings = db
