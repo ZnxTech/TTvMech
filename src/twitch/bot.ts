@@ -156,7 +156,8 @@ export class TwitchBot {
         try {
             const session = await this.getEventSubSession();
             const auth = await this.getAuth();
-            const join = this.joins.getOrInsert(broadcaster_id, { is_online: true, subs: [] });
+            const join: { is_online: boolean, subs: string[] } = { is_online: true, subs: [] };
+            this.joins.set(broadcaster_id, join);
 
             const subs = await Promise.all([
                 EventSub.channelChatMessage(auth, {
