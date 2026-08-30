@@ -1,0 +1,23 @@
+{
+	"name": "@ttvmech/plugin-api",
+	"version": "2.0.0-indev",
+	"type": "module",
+	"private": true,
+	"exports": {
+		".": {
+			"import": "./dist/main.js",
+			"types": "./dist/main.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc --build",
+		"clean": "tsc --build --clean"
+	},
+	"dependencies": {
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"prettier": "^3.9.6",
+		"typescript": "^7.0.2"
+	}
+}

@@ -3,21 +3,23 @@
 	"version": "2.0.0-indev",
 	"module": "dist/main.js",
 	"type": "module",
-    "private": true,
-    "workspaces": [
-        "modules/plugin-api",
-        "modules/twitch-api"
-    ],
+	"private": true,
+	"workspaces": [
+		"modules/plugin-api",
+		"modules/twitch-api"
+	],
 	"scripts": {
 		"format": "prettier . --write",
 		"build": "tsc --build",
-        "build-all": "npm run build --workspaces",
+		"build-all": "npm run build --workspaces",
 		"clean": "tsc --build --clean",
-        "clean-all": "npm run clean --workspaces",
+		"clean-all": "npm run clean --workspaces",
 		"prestart": "npm run build-all && drizzle-kit migrate",
 		"start": "node dist/main.js"
 	},
 	"dependencies": {
+		"@ttvmech/plugin-api": "^2.0.0-indev",
+		"@ttvmech/twitch-api": "^2.0.0-indev",
 		"cookie-parser": "^1.4.7",
 		"drizzle-kit": "^1.0.0-rc.4",
 		"drizzle-orm": "^1.0.0-rc.4",

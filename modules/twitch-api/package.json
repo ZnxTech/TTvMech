@@ -1,0 +1,31 @@
+{
+	"name": "@ttvmech/twitch-api",
+	"version": "2.0.0-indev",
+	"type": "module",
+	"private": true,
+	"exports": {
+		".": {
+			"import": "./dist/api.js",
+			"types": "./dist/api.d.ts"
+		},
+		"./eventsub": {
+			"import": "./dist/eventsub.js",
+			"types": "./dist/eventsub.d.ts"
+		},
+		"./schemas": {
+			"import": "./dist/schemas.js",
+			"types": "./dist/schemas.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc --build",
+		"clean": "tsc --build --clean"
+	},
+	"dependencies": {
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"prettier": "^3.9.6",
+		"typescript": "^7.0.2"
+	}
+}
