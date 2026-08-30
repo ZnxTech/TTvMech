@@ -1,30 +1,37 @@
 {
-  "name": "ttvmech",
-  "version": "2.0.0-indev",
-  "module": "main.ts",
-  "type": "module",
-  "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "prestart": "tsc --build && drizzle-kit migrate",
-    "start": "node dist/main.js"
-  },
-  "private": true,
-  "dependencies": {
-    "cookie-parser": "^1.4.7",
-    "drizzle-kit": "^1.0.0-rc.4",
-    "drizzle-orm": "^1.0.0-rc.4",
-    "ejs": "^6.0.1",
-    "express": "^5.2.1",
-    "qs": "^6.15.3",
-    "tsx": "^4.23.12",
-    "typescript": "^5.9.3",
-    "zod": "^4.4.3"
-  },
-  "devDependencies": {
-    "@types/cookie-parser": "^1.4.10",
-    "@types/ejs": "^3.1.5",
-    "@types/express": "^5.0.6",
-    "@types/qs": "^6.15.1"
-  }
+	"name": "ttvmech",
+	"version": "2.0.0-indev",
+	"module": "dist/main.js",
+	"type": "module",
+    "private": true,
+    "workspaces": [
+        "modules/plugin-api",
+        "modules/twitch-api"
+    ],
+	"scripts": {
+		"format": "prettier . --write",
+		"build": "tsc --build",
+        "build-all": "npm run build --workspaces",
+		"clean": "tsc --build --clean",
+        "clean-all": "npm run clean --workspaces",
+		"prestart": "npm run build-all && drizzle-kit migrate",
+		"start": "node dist/main.js"
+	},
+	"dependencies": {
+		"cookie-parser": "^1.4.7",
+		"drizzle-kit": "^1.0.0-rc.4",
+		"drizzle-orm": "^1.0.0-rc.4",
+		"ejs": "^6.0.1",
+		"express": "^5.2.1",
+		"qs": "^6.15.3",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@types/cookie-parser": "^1.4.10",
+		"@types/ejs": "^3.1.5",
+		"@types/express": "^5.0.6",
+		"@types/qs": "^6.15.1",
+		"prettier": "^3.9.6",
+		"typescript": "^7.0.2"
+	}
 }
