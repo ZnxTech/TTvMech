@@ -22,10 +22,6 @@ export namespace HTMX.V1 {
 		res.status(200).render("elements/bots.ejs", { bots: bots });
 	});
 
-	ROUTER.route("/bots/button/twitch").get(Auth.middleSessionAuth(true, true), (req, res) => {
-		res.status(200).render("elements/bot.ejs", { link: undefined });
-	});
-
 	ROUTER.route("/users").get(Auth.middleSessionAuth(true, true), (req, res) => {
 		const users = db
 			.select({
