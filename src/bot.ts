@@ -12,11 +12,11 @@ import { Bot } from "./commands.js";
 const MESSAGES_PER_30S = 20;
 const MESSAGES_PER_30S_MODDED = 100;
 
-type BotJoin = {
+interface BotJoin {
 	is_online: boolean;
 	is_offline_only: boolean;
 	eventsub_subs: string[];
-};
+}
 
 export class TwitchBot extends Bot {
 	private auth: BotAuth;

@@ -63,11 +63,11 @@ const ejs_meta = {
 	version: Meta.META_VERSION,
 };
 
-type Route = {
+interface Route {
 	meta: typeof ejs_meta;
 	view: string;
 	session?: Auth.Session;
-};
+}
 
 app.get("/init", middleInitRedirect(false, "/dashboard"), (req, res) => {
 	res.render("init.ejs", { meta: ejs_meta });

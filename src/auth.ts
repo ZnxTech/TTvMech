@@ -119,13 +119,13 @@ export namespace Auth {
 		}
 	}
 
-	export type Session = {
+	export interface Session {
 		id: string;
 		user_uuid: string;
 		user_name: string;
 		is_admin: boolean;
 		is_super_admin: boolean;
-	};
+	}
 
 	export function middleSession(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
 		const session_id = req.cookies.session_id as string | undefined;
@@ -163,7 +163,7 @@ export namespace Auth {
 			user_name: user.name,
 			is_admin: user.is_admin,
 			is_super_admin: user.is_super_admin,
-		};
+		} as Session;
 
 		next();
 	}

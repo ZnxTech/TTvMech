@@ -204,21 +204,21 @@ export namespace Helix {
 		}
 	}
 
-	type EventSubTransportWebSocket = {
+	interface EventSubTransportWebSocket {
 		method: "websocket";
 		session_id: string;
-	};
+	}
 
-	type EventSubTransportWebHook = {
+	interface EventSubTransportWebHook {
 		method: "webhook";
 		callback: string;
 		secret: string;
-	};
+	}
 
-	type EventSubTransportConduit = {
+	interface EventSubTransportConduit {
 		method: "conduit";
 		conduit_id: string;
-	};
+	}
 
 	export type EventSubTransport = EventSubTransportWebSocket | EventSubTransportWebHook | EventSubTransportConduit;
 

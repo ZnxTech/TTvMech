@@ -2,12 +2,12 @@ import Z from "zod";
 
 import { WebSocketSchemas } from "./schemas.js";
 
-export type EventSubWebSocketSession = {
+export interface EventSubWebSocketSession {
 	id: string;
 	total: number;
 	total_cost: number;
 	total_max_cost: number;
-};
+}
 
 export class EventSubWebSocket {
 	private ws?: WebSocket;
