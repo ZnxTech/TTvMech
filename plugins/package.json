@@ -1,0 +1,13 @@
+{
+	"name": "@ttvmech/plugin-examples",
+	"version": "2.0.0-indev",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "tsc --build",
+		"clean": "tsc --build --clean"
+	},
+	"dependencies": {
+		"@ttvmech/plugin-api": "^2.0.0-indev"
+	}
+}
