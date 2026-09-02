@@ -18,8 +18,8 @@
 		"start": "node dist/main.js"
 	},
 	"dependencies": {
-		"@ttvmech/plugin-api": "^2.0.0-indev",
-		"@ttvmech/twitch-api": "^2.0.0-indev",
+		"@ttvmech/plugin-api": "file:modules/plugin-api",
+		"@ttvmech/twitch-api": "file:modules/twitch-api",
 		"cookie-parser": "^1.4.7",
 		"drizzle-kit": "^1.0.0-rc.4",
 		"drizzle-orm": "^1.0.0-rc.4",
