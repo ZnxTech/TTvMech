@@ -163,7 +163,7 @@ export namespace APISchemas {
 		description: Z.string(),
 		profile_image_url: Z.url(),
 		offline_image_url: Z.url(),
-		view_count: Z.number(),
+		view_count: Z.number(), // Deprecated: will return an invalid value.
 		email: Z.string().optional(),
 		created_at: Z.iso.datetime(),
 	});
