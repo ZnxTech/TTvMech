@@ -310,6 +310,45 @@ export namespace Helix {
 		}
 	}
 
+	// Ref: https://dev.twitch.tv/docs/api/reference/#get-streams
+	export async function getStreams<A extends Auth>(
+		auth: A,
+		data: {
+			user_id?: string;
+			user_login?: string;
+			game_id?: string;
+			type?: "all" | "live";
+			language?: string;
+			first?: number;
+			before?: string;
+			after?: string;
+		}
+	): Promise<Z.infer<typeof APISchemas.GET_STREAMS>> {
+		const url = new URL("https://api.twitch.tv/helix/streams");
+		Object.entries(data).forEach(([key, val]) => {
+			url.searchParams.append(key, String(val));
+		});
+
+		const res = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${auth.token()}`,
+				"Client-Id": auth.clientId(),
+			},
+		});
+
+		if (!res.ok) {
+			throw new Error("Failed to get users");
+		}
+
+		const json = APISchemas.GET_STREAMS.safeParse(res.body);
+		if (json.success) {
+			return json.data;
+		} else {
+			throw new Error("Invalid users json recived");
+		}
+	}
+
 	// Ref: https://dev.twitch.tv/docs/api/reference/#get-users
 	export async function getUsers<A extends Auth>(
 		auth: A,

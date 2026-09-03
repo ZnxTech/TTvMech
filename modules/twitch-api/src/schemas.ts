@@ -129,6 +129,31 @@ export namespace APISchemas {
 		}),
 	});
 
+	const GET_STREAMS_STREAM = Z.object({
+		id: Z.string(),
+		user_id: Z.string(),
+		user_login: Z.string(),
+		user_name: Z.string(),
+		game_id: Z.string(),
+		game_name: Z.string(),
+		type: Z.literal("live"),
+		title: Z.string(),
+		tags: Z.string().array(),
+		viewer_count: Z.number(),
+		started_at: Z.iso.datetime(),
+		language: Z.string(),
+		thumbnail_url: Z.url(),
+		tag_ids: Z.tuple([]), // Deprecated: will always return an empty array.
+		is_mature: Z.literal(false), // Deprecated: will always return false.
+	});
+
+	export const GET_STREAMS = Z.object({
+		data: GET_STREAMS_STREAM.array(),
+		pagination: Z.object({
+			cursor: Z.string().optional(),
+		}),
+	});
+
 	const GET_USERS_USER = Z.object({
 		id: Z.string(),
 		login: Z.string(),
