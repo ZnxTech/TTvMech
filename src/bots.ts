@@ -340,7 +340,7 @@ export class TwitchBot extends PluginBot {
 			this.joins.set(channel_id, join);
 			this.join_listener(this, {
 				origin: "twitch",
-				status: "live",
+				status: join.is_online ? "live" : "offline",
 				channel_id: channel_id,
 				channel_uname: join.twitch_uname,
 				channel_dname: join.twitch_dname,
@@ -372,6 +372,15 @@ export class TwitchBot extends PluginBot {
 		try {
 			await this.deleteJoinEventSubs(auth, join, session);
 			this.joins.delete(channel_id);
+
+			this.part_listener(this, {
+				origin: "twitch",
+				status: join.is_online ? "live" : "offline",
+				channel_id: channel_id,
+				channel_uname: join.twitch_uname,
+				channel_dname: join.twitch_dname,
+			});
+
 			return true;
 		} catch {
 			return false;
