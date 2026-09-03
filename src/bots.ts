@@ -18,7 +18,7 @@ interface TwitchBotJoin {
 	twitch_uname: string;
 	twitch_dname: string;
 	is_online: boolean;
-	eventsub_subs: string[];
+	eventsub_ids: string[];
 }
 
 export class TwitchBot extends PluginBot {
@@ -262,7 +262,7 @@ export class TwitchBot extends PluginBot {
 			twitch_uname: channel.login,
 			twitch_dname: channel.display_name,
 			is_online: is_online,
-			eventsub_subs: [],
+			eventsub_ids: [],
 		};
 	}
 
@@ -292,7 +292,7 @@ export class TwitchBot extends PluginBot {
 				session.total = eventsub.total;
 				session.total_cost = eventsub.total_cost;
 				session.total_max_cost = eventsub.max_total_cost;
-				join.eventsub_subs.push(eventsub.data[0].id);
+				join.eventsub_ids.push(eventsub.data[0].id);
 			} else {
 				failed = true;
 			}
@@ -305,7 +305,7 @@ export class TwitchBot extends PluginBot {
 	}
 
 	private async deleteJoinEventSubs(auth: TwitchBotAuth, join: TwitchBotJoin, session: EventSubWebSocketSession) {
-		const promises = join.eventsub_subs.map((id) => {
+		const promises = join.eventsub_ids.map((id) => {
 			return Helix.deleteEventSub(auth, { id: id });
 		});
 
