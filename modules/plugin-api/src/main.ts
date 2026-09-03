@@ -29,7 +29,7 @@ export abstract class PluginBot {
 
 	public abstract message(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean>;
 
-	public abstract join(channel_id: string, offline_only: boolean): Promise<boolean>;
+	public abstract join(channel_id: string): Promise<boolean>;
 
 	public abstract part(channel_id: string): Promise<boolean>;
 }
