@@ -52,7 +52,6 @@ export class EventSubWebSocket {
 		}
 
 		this.welcome_listener(ev.data);
-		this.welcome_listener = () => {};
 
 		// When reconnecting, close the old WebSocket only after
 		// the welcome message of the new WebSocket.
@@ -149,7 +148,6 @@ export class EventSubWebSocket {
 
 		this.ws.addEventListener("close", (ev) => {
 			this.close_listener(ev.code);
-			this.close_listener = () => {};
 		});
 	}
 
