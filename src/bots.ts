@@ -163,18 +163,28 @@ export class TwitchBot extends PluginBot {
 						session.id = ev.payload.session.id;
 					});
 
+					this.eventsub_ws.setCloseListener((ev) => {
+						this.eventsub_ws_session = null;
+					});
+
 					res(session);
 				});
 
 				this.eventsub_ws.setCloseListener((ev) => {
 					rej();
 				});
-
-				this.eventsub_ws.connect();
 			});
+
+			this.eventsub_ws.connect();
 		}
 
-		return await this.eventsub_ws_session;
+		try {
+			const session = await this.eventsub_ws_session;
+			return session;
+		} catch {
+			this.eventsub_ws_session = null;
+			throw new Error("Could not establish EventSub websocket");
+		}
 	}
 
 	public setMessageListener(callback: (bot: TwitchBot, ev: MessageEvent) => void) {
