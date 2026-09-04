@@ -111,9 +111,8 @@ export class EventSubWebSocket {
 	}
 
 	public connect(url?: URL) {
+		this.close();
 		this.ws = new WebSocket(url ?? new URL("wss://eventsub.wss.twitch.tv/ws"));
-
-		this.ws.addEventListener("open", (ev) => {});
 
 		this.ws.addEventListener("message", (ev) => {
 			const generic = WebSocketSchemas.META.safeParse(ev.data);
