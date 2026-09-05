@@ -378,6 +378,31 @@ export class TwitchBot {
 		}
 	}
 
+	public getPluginBot(): PluginBot {
+		return {
+			origin_id: this.twitch_id,
+			origin_uname: this.twitch_uname,
+			origin_dname: this.twitch_dname,
+
+			originAuthToken: async () => {
+				const auth = await this.getAuth();
+				return auth.token();
+			},
+
+			message: async (channel_id: string, message: string, reply_to_message_id?: string) => {
+				return await this.message(channel_id, message, reply_to_message_id);
+			},
+
+			join: async (channel_id: string) => {
+				return await this.join(channel_id);
+			},
+
+			part: async (channel_id: string) => {
+				return await this.part(channel_id);
+			},
+		};
+	}
+
 	public close() {
 		this.eventsub_ws.close();
 	}
