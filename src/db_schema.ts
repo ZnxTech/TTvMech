@@ -22,19 +22,21 @@ export const table_users = sqliteTable("users", (t) => ({
 
 export const table_user_sessions = sqliteTable("user_sessions", (t) => ({
 	id: t.text().primaryKey(),
-	user_uuid: t
-		.text()
-		.notNull()
-		.references(() => table_users.uuid, { onDelete: "cascade", onUpdate: "cascade" }),
+	// prettier-ignore
+	user_uuid: t.text().notNull().references(() => table_users.uuid, {
+		onDelete: "cascade",
+		onUpdate: "cascade",
+	}),
 	expire_unix_ms: t.integer({ mode: "timestamp_ms" }).notNull(),
 }));
 
 export const table_user_csrfs = sqliteTable("user_csrfs", (t) => ({
 	id: t.text().primaryKey(),
-	session_id: t
-		.text()
-		.notNull()
-		.references(() => table_user_sessions.id, { onDelete: "cascade", onUpdate: "cascade" }),
+	// prettier-ignore
+	session_id: t.text().notNull().references(() => table_user_sessions.id, {
+		onDelete: "cascade",
+		onUpdate: "cascade",
+	}),
 	expire_unix_ms: t.integer({ mode: "timestamp_ms" }).notNull(),
 }));
 
@@ -49,9 +51,11 @@ export const table_twitch_users = sqliteTable("twitch_users", (t) => ({
 	twitch_uname: t.text().notNull().unique(),
 	twitch_dname: t.text().notNull().unique(),
 	points: t.blob({ mode: "bigint" }).notNull().unique(),
-	perm_uuid: t
-		.text()
-		.references(() => table_twitch_user_permissions.uuid, { onDelete: "set null", onUpdate: "cascade" }),
+	// prettier-ignore
+	perm_uuid: t.text().references(() => table_twitch_user_permissions.uuid, {
+		onDelete: "set null",
+		onUpdate: "cascade",
+	}),
 }));
 
 export const table_twitch_bots = sqliteTable("twitch_bots", (t) => ({
@@ -73,9 +77,11 @@ export const table_twitch_channels = sqliteTable("twitch_channels", (t) => ({
 	twitch_dname: t.text().notNull(),
 	active: t.integer({ mode: "boolean" }).notNull(),
 	offline_only: t.integer({ mode: "boolean" }).notNull(),
-	bot_twitch_id: t
-		.text()
-		.references(() => table_twitch_bots.twitch_id, { onDelete: "set null", onUpdate: "cascade" }),
+	// prettier-ignore
+	bot_twitch_id: t.text().references(() => table_twitch_bots.twitch_id, {
+		onDelete: "set null",
+		onUpdate: "cascade",
+	}),
 }));
 
 export const table_commands = sqliteTable("commands", (t) => ({
@@ -90,10 +96,11 @@ export const table_commands = sqliteTable("commands", (t) => ({
 }));
 
 export const table_command_aliases = sqliteTable("command_aliases", (t) => ({
-	uuid: t
-		.text()
-		.primaryKey()
-		.references(() => table_commands.uuid, { onDelete: "cascade", onUpdate: "cascade" }),
+	// prettier-ignore
+	uuid: t.text().primaryKey().references(() => table_commands.uuid, {
+		onDelete: "cascade",
+		onUpdate: "cascade",
+	}),
 	alias: t.text().notNull().unique(),
 	active: t.integer({ mode: "boolean" }).notNull(),
 }));
