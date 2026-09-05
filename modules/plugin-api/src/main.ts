@@ -45,13 +45,13 @@ export interface Plugin {
 	name: string;
 	version: string;
 
-	on_load?(state: PluginState): void;
-	on_enable?(state: PluginState): void;
-	on_disable?(state: PluginState): void;
-	on_message?(state: PluginState, bot: PluginBot, message: MessageEvent): void;
-	on_stream?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
-	on_join?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
-	on_part?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
+	onLoad?(state: PluginState): void;
+	onEnable?(state: PluginState): void;
+	onDisable?(state: PluginState): void;
+	onMessage?(state: PluginState, bot: PluginBot, message: MessageEvent): void;
+	onStream?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
+	onJoin?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
+	onPart?(state: PluginState, bot: PluginBot, channel: ChannelEvent): void;
 }
 
 export function plugin(opt: Plugin): Plugin {
