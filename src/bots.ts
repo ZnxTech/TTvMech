@@ -21,7 +21,7 @@ interface TwitchBotJoin {
 	eventsub_ids: string[];
 }
 
-export class TwitchBot extends PluginBot {
+export class TwitchBot {
 	private auth: TwitchBotAuth;
 	private twitch_id: string;
 	private twitch_uname: string;
@@ -39,8 +39,6 @@ export class TwitchBot extends PluginBot {
 	private fault_listener: (bot: TwitchBot) => void;
 
 	constructor(auth: TwitchBotAuth, twitch_id: string, twitch_uname: string, twitch_dname: string) {
-		super();
-
 		this.auth = auth;
 		this.twitch_id = twitch_id;
 		this.twitch_uname = twitch_uname;
@@ -207,24 +205,7 @@ export class TwitchBot extends PluginBot {
 		this.fault_listener = callback;
 	}
 
-	public override getUName(): string {
-		return this.twitch_uname;
-	}
-
-	public override getDName(): string {
-		return this.twitch_dname;
-	}
-
-	public override getOriginId(): string {
-		return this.twitch_id;
-	}
-
-	public override async getOriginAuth(): Promise<string> {
-		const auth = await this.getAuth();
-		return auth.token();
-	}
-
-	public override async message(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean> {
+	public async message(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean> {
 		let auth: TwitchBotAuth;
 		try {
 			auth = await this.getAuth();
@@ -327,7 +308,7 @@ export class TwitchBot extends PluginBot {
 		session.total_max_cost = eventsubs.max_total_cost;
 	}
 
-	public override async join(channel_id: string): Promise<boolean> {
+	public async join(channel_id: string): Promise<boolean> {
 		if (this.joins.get(channel_id) !== undefined) {
 			// Already joined, no need to duplicate EventSub subs
 			return false;
@@ -362,7 +343,7 @@ export class TwitchBot extends PluginBot {
 		}
 	}
 
-	public override async part(channel_id: string): Promise<boolean> {
+	public async part(channel_id: string): Promise<boolean> {
 		const join = this.joins.get(channel_id);
 		if (join === undefined) {
 			// Not joined, skip and return false.
