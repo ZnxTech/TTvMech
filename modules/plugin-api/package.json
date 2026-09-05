@@ -7,6 +7,10 @@
 		".": {
 			"import": "./dist/main.js",
 			"types": "./dist/main.d.ts"
+		},
+		"./schemas": {
+			"import": "./dist/schemas.js",
+			"types": "./dist/schemas.d.ts"
 		}
 	},
 	"scripts": {
