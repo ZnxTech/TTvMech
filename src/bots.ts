@@ -38,7 +38,7 @@ export class TwitchBot {
 	private part_listener: (bot: TwitchBot, ev: ChannelEvent) => void;
 	private fault_listener: (bot: TwitchBot) => void;
 
-	constructor(auth: TwitchBotAuth, twitch_id: string, twitch_uname: string, twitch_dname: string) {
+	public constructor(auth: TwitchBotAuth, twitch_id: string, twitch_uname: string, twitch_dname: string) {
 		this.auth = auth;
 		this.twitch_id = twitch_id;
 		this.twitch_uname = twitch_uname;
@@ -138,6 +138,15 @@ export class TwitchBot {
 			}
 
 			await this.auth.refresh(settings.client_secret);
+			const _ = db
+				.update(tables.twitch_bots)
+				.set({
+					twitch_access_token: this.auth.token(),
+					twitch_refresh_token: this.auth.refreshToken(),
+					expire_unix_ms: this.auth.expiresAt(),
+				})
+				.where(eq(tables.twitch_bots.twitch_id, this.twitch_id))
+				.run();
 		}
 
 		return this.auth;
