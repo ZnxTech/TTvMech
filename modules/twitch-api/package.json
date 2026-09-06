@@ -5,8 +5,8 @@
 	"private": true,
 	"exports": {
 		".": {
-			"import": "./dist/api.js",
-			"types": "./dist/api.d.ts"
+			"import": "./dist/main.js",
+			"types": "./dist/main.d.ts"
 		},
 		"./eventsub": {
 			"import": "./dist/eventsub.js",
