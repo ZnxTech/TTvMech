@@ -66,7 +66,15 @@ export namespace Auth {
 	}
 
 	export function createUserSession(user_name: string, user_pass: string): [session_id: string, expires_in: number] {
-		const user = db.select().from(tables.users).where(eq(tables.users.name, user_name)).get();
+		const user = db
+			.select({
+				uuid: tables.users.uuid,
+				salt: tables.users.salt,
+				pass_hash: tables.users.pass_hash,
+			})
+			.from(tables.users)
+			.where(eq(tables.users.name, user_name))
+			.get();
 
 		if (user === undefined) {
 			throw new Error("Invalid username.");
