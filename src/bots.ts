@@ -123,6 +123,14 @@ export class TwitchBot {
 		this.fault_listener = () => {};
 	}
 
+	private setFaulty() {
+		const _ = db
+			.update(tables.twitch_bots)
+			.set({ faulty: true })
+			.where(eq(tables.twitch_bots.twitch_id, this.twitch_id))
+			.run();
+	}
+
 	private async getAuth(): Promise<TwitchBotAuth> {
 		if (this.auth.expired()) {
 			const settings = db
@@ -220,6 +228,7 @@ export class TwitchBot {
 		try {
 			auth = await this.getAuth();
 		} catch {
+			this.setFaulty();
 			this.fault_listener(this);
 			return false;
 		}
@@ -330,6 +339,7 @@ export class TwitchBot {
 			session = await this.getEventSubSession();
 			auth = await this.getAuth();
 		} catch {
+			this.setFaulty();
 			this.fault_listener(this);
 			return false;
 		}
@@ -366,6 +376,7 @@ export class TwitchBot {
 			session = await this.getEventSubSession();
 			auth = await this.getAuth();
 		} catch {
+			this.setFaulty();
 			this.fault_listener(this);
 			return false;
 		}
@@ -395,8 +406,14 @@ export class TwitchBot {
 			origin_dname: this.twitch_dname,
 
 			originAuthToken: async () => {
-				const auth = await this.getAuth();
-				return auth.token();
+				try {
+					const auth = await this.getAuth();
+					return auth.token();
+				} catch {
+					this.setFaulty();
+					this.fault_listener(this);
+					throw new Error("Could not obtain auth token");
+				}
 			},
 
 			message: async (channel_id: string, message: string, reply_to_message_id?: string) => {
