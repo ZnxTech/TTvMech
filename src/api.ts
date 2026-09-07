@@ -291,6 +291,7 @@ export namespace API.V1 {
 					twitch_id: validation.user_id,
 					twitch_dname: validation.login,
 					twitch_uname: validation.login,
+					twitch_client_id: validation.client_id,
 					twitch_access_token: auth.token(),
 					twitch_refresh_token: auth.refreshToken(),
 					twitch_scopes: auth.scope().join(","),
@@ -302,6 +303,7 @@ export namespace API.V1 {
 					set: {
 						twitch_dname: validation.login,
 						twitch_uname: validation.login,
+						twitch_client_id: validation.client_id,
 						twitch_access_token: auth.token(),
 						twitch_refresh_token: auth.refreshToken(),
 						twitch_scopes: auth.scope().join(","),

@@ -64,6 +64,7 @@ export const table_twitch_bots = sqliteTable("twitch_bots", (t) => ({
 	twitch_dname: t.text().notNull(),
 	// Comma seperated scopes string.
 	// e.g. "user:bot,user:read:chat,user:write:chat"
+	twitch_client_id: t.text().notNull(),
 	twitch_scopes: t.text().notNull(),
 	twitch_access_token: t.text().notNull(),
 	twitch_refresh_token: t.text().notNull(),
