@@ -143,6 +143,7 @@ export class TwitchBot {
 				.set({
 					twitch_access_token: this.auth.token(),
 					twitch_refresh_token: this.auth.refreshToken(),
+					twitch_scopes: this.auth.scope().join(","),
 					expire_unix_ms: this.auth.expiresAt(),
 				})
 				.where(eq(tables.twitch_bots.twitch_id, this.twitch_id))
