@@ -393,6 +393,10 @@ export class TwitchBot {
 				channel_dname: join.twitch_dname,
 			});
 
+			if (this.joins.size === 0) {
+				this.eventsub_ws.close();
+			}
+
 			return true;
 		} catch {
 			return false;
