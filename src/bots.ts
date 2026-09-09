@@ -203,6 +203,18 @@ export class TwitchBot {
 		}
 	}
 
+	public getTwitchId(): string {
+		return this.twitch_id;
+	}
+
+	public getTwitchUName(): string {
+		return this.twitch_uname;
+	}
+
+	public getTwitchDName(): string {
+		return this.twitch_dname;
+	}
+
 	public setMessageListener(callback: (bot: TwitchBot, ev: MessageEvent) => void) {
 		this.message_listener = callback;
 	}
