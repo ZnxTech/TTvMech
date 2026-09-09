@@ -86,19 +86,19 @@ export const table_twitch_channels = sqliteTable("twitch_channels", (t) => ({
 }));
 
 export const table_commands = sqliteTable("commands", (t) => ({
-	uuid: t.text().primaryKey(),
-	name: t.text().notNull().unique(),
+	trigger: t.text().primaryKey(),
 	active: t.integer({ mode: "boolean" }).notNull(),
 	req_score: t.integer().notNull(),
 	user_cooldown: t.integer().notNull(),
 	chat_cooldown: t.integer().notNull(),
+	name: t.text().notNull().unique(),
 	description: t.text().notNull(),
 	response: t.text().notNull(),
 }));
 
 export const table_command_aliases = sqliteTable("command_aliases", (t) => ({
 	// prettier-ignore
-	uuid: t.text().primaryKey().references(() => table_commands.uuid, {
+	trigger: t.text().primaryKey().references(() => table_commands.trigger, {
 		onDelete: "cascade",
 		onUpdate: "cascade",
 	}),
