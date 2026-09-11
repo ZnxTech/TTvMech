@@ -76,7 +76,7 @@ export namespace Auth {
 			.where(eq(tables.users.name, user_name))
 			.get();
 
-		if (user === undefined) {
+		if (!user) {
 			throw new Error("Invalid username.");
 		}
 
@@ -120,7 +120,7 @@ export namespace Auth {
 
 		const csrf = db.select().from(tables.user_csrfs).where(eq(tables.user_csrfs.id, csrf_id)).get();
 
-		if (csrf === undefined) {
+		if (!csrf) {
 			return false;
 		} else {
 			return csrf.session_id === session_id;
@@ -137,7 +137,7 @@ export namespace Auth {
 
 	export function middleSession(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
 		const session_id = req.cookies.session_id as string | undefined;
-		if (session_id === undefined) {
+		if (!session_id) {
 			return next();
 		}
 
@@ -161,7 +161,7 @@ export namespace Auth {
 			.where(inArray(tables.users.uuid, session_subquery))
 			.get();
 
-		if (user === undefined) {
+		if (!user) {
 			return next();
 		}
 
@@ -180,7 +180,7 @@ export namespace Auth {
 		return (req, res, next) => {
 			const session = res.locals.session as Session | undefined;
 
-			if (session === undefined) {
+			if (!session) {
 				return res.sendStatus(403);
 			}
 

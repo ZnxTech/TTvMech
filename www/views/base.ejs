@@ -14,7 +14,7 @@
             <i id="title-version"><%- meta.version %></i>
         </div>
         <div id="login" class="flx row g-1">
-            <% if (session === undefined) { %>
+            <% if (!session) { %>
                 <a class="btn tx-b" href="/login">Login</a>
             <% } else { %>
                 <div class="box tx-b"><%= session.user_name %></div>

@@ -43,7 +43,7 @@ function middleAuthRedirect(need_admin: boolean, need_super_admin: boolean, rout
 	return (req, res, next) => {
 		const session = res.locals.session as Auth.Session | undefined;
 
-		if (session === undefined) {
+		if (!session) {
 			return res.redirect(route);
 		}
 

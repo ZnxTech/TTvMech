@@ -55,7 +55,7 @@ export class EventSubWebSocket {
 
 		// When reconnecting, close the old WebSocket only after
 		// the welcome message of the new WebSocket.
-		if (this.ws_old !== undefined) {
+		if (this.ws_old) {
 			this.ws_old.close();
 			this.ws_old = undefined;
 		}
@@ -151,11 +151,11 @@ export class EventSubWebSocket {
 	}
 
 	public close() {
-		if (this.ws !== undefined) {
+		if (this.ws) {
 			this.ws.close();
 		}
 
-		if (this.ws_old !== undefined) {
+		if (this.ws_old) {
 			this.ws_old.close();
 		}
 	}

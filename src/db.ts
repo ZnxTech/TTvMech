@@ -21,7 +21,7 @@ export namespace Util {
 			.where(eq(tables.settings.id, 0))
 			.get();
 
-		if (settings === undefined) {
+		if (!settings) {
 			return fail_as;
 		} else {
 			return settings.init;

@@ -51,7 +51,7 @@ export class TwitchBot {
 
 			if (message.success) {
 				const join = this.joins.get(message.data.broadcaster_user_id);
-				if (join === undefined) {
+				if (!join) {
 					// Recived message from a channel that the bot did not join to, ignore.
 					return;
 				}
@@ -76,7 +76,7 @@ export class TwitchBot {
 			if (online.success) {
 				const join = this.joins.get(online.data.broadcaster_user_id);
 
-				if (join === undefined) {
+				if (!join) {
 					return;
 				}
 
@@ -97,7 +97,7 @@ export class TwitchBot {
 			if (offline.success) {
 				const join = this.joins.get(offline.data.broadcaster_user_id);
 
-				if (join === undefined) {
+				if (!join) {
 					return;
 				}
 
@@ -141,7 +141,7 @@ export class TwitchBot {
 				.where(eq(tables.settings.id, 0))
 				.get();
 
-			if (settings === undefined || settings.client_secret === null) {
+			if (!settings || !settings.client_secret) {
 				throw new Error("Failed to obtain client secret");
 			}
 
@@ -162,7 +162,7 @@ export class TwitchBot {
 	}
 
 	private async getEventSubSession(): Promise<EventSubWebSocketSession> {
-		if (this.eventsub_ws_session === null) {
+		if (!this.eventsub_ws_session) {
 			const auth = await this.getAuth();
 
 			this.eventsub_ws_session = new Promise((res, rej) => {
@@ -275,7 +275,7 @@ export class TwitchBot {
 
 		const is_online = streams.data.length !== 0;
 		const channel = users.data[0];
-		if (channel === undefined) {
+		if (!channel) {
 			throw new Error("Failed to get channel information");
 		}
 
@@ -340,7 +340,7 @@ export class TwitchBot {
 	}
 
 	public async join(channel_id: string): Promise<boolean> {
-		if (this.joins.get(channel_id) !== undefined) {
+		if (this.joins.get(channel_id)) {
 			// Already joined, no need to duplicate EventSub subs
 			return false;
 		}
@@ -377,7 +377,7 @@ export class TwitchBot {
 
 	public async part(channel_id: string): Promise<boolean> {
 		const join = this.joins.get(channel_id);
-		if (join === undefined) {
+		if (!join) {
 			// Not joined, skip and return false.
 			return false;
 		}

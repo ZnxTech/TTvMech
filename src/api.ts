@@ -102,7 +102,7 @@ export namespace API.V1 {
 		.delete(Auth.middleSessionAuth(false, false), (req, res) => {
 			const session = res.locals.session as Auth.Session | undefined;
 
-			if (session === undefined) {
+			if (!session) {
 				return res.status(400).send("No session found");
 			}
 
@@ -133,7 +133,7 @@ export namespace API.V1 {
 				.where(eq(tables.users.uuid, user_uuid.data))
 				.get();
 
-			if (user === undefined) {
+			if (!user) {
 				res.status(400).send("Invalid user UUID.");
 			} else {
 				res.status(200).json(user);
@@ -157,7 +157,7 @@ export namespace API.V1 {
 				.where(eq(tables.users.uuid, user_uuid.data))
 				.get();
 
-			if (user === undefined) {
+			if (!user) {
 				return res.status(400).send("Invalid user UUID.");
 			}
 
@@ -266,7 +266,7 @@ export namespace API.V1 {
 				.where(eq(tables.settings.id, 0))
 				.get();
 
-			if (settings === undefined || settings.client_id === null || settings.client_secret === null) {
+			if (!settings || !settings.client_id || !settings.client_secret) {
 				const query_str = Qs.stringify({
 					error: "bot",
 					type: "client",
@@ -327,13 +327,13 @@ export namespace API.V1 {
 			.where(eq(tables.settings.id, 0))
 			.get();
 
-		if (settings === undefined || settings.client_id === null) {
+		if (!settings || !settings.client_id) {
 			return res.sendStatus(500);
 		}
 
 		const session = res.locals.session as Auth.Session | undefined;
 
-		if (session === undefined) {
+		if (!session) {
 			return res.sendStatus(400);
 		}
 
@@ -365,7 +365,7 @@ export namespace API.V1 {
 				.where(eq(tables.twitch_bots.twitch_id, twitch_id))
 				.get();
 
-			if (twitch_bot === undefined) {
+			if (!twitch_bot) {
 				res.status(400).send("Invalid bot Twitch id.");
 			} else {
 				res.status(200).json({ data: twitch_bot });

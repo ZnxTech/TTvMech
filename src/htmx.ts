@@ -49,7 +49,7 @@ export namespace HTMX.V1 {
 			.where(eq(tables.settings.id, 0))
 			.get();
 
-		if (settings === undefined) {
+		if (!settings) {
 			return res.sendStatus(500);
 		}
 

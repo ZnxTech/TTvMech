@@ -1,6 +1,6 @@
 <a class="btn tx-b" href="/dashboard">/dashboard</a>
 <a class="btn tx-b" href="/manual">/manual</a>
-<% if (session !== undefined) { %>
+<% if (session) { %>
     <% if (session.is_admin) { %>
         <a class="btn tx-b" href="/commands">/commands</a>
         <a class="btn tx-b" href="/plugins">/plugins</a>
