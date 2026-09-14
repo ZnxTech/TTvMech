@@ -10,8 +10,16 @@ import { EventSubSchemas } from "@ttvmech/twitch-api/schemas";
 import { db } from "./db.js";
 import { tables } from "./db_schema.js";
 
-const TWITCH_MESSAGES_PER_30S = 20;
-const TWITCH_MESSAGES_PER_30S_MODDED = 100;
+const GLOBAL_MESSAGES_PER_30S = 20;
+const GLOBAL_MESSAGES_PER_30S_MODDED = 100;
+const CHANNEL_MESSAGES_PER_1S = 1;
+
+interface TwitchBotMessage {
+	channel_id: string;
+	message: string;
+	reply_to_message_id?: string;
+	resolve: (res: boolean) => void;
+}
 
 interface TwitchBotJoin {
 	twitch_id: string;
@@ -29,6 +37,10 @@ export class TwitchBot {
 
 	private eventsub_ws: EventSubWebSocket;
 	private eventsub_ws_session: Promise<EventSubWebSocketSession> | null;
+
+	private message_queue: TwitchBotMessage[];
+	private messages_sent: number;
+	private messages_in_queue: boolean;
 
 	private joins: Map<string, TwitchBotJoin>;
 
@@ -113,6 +125,10 @@ export class TwitchBot {
 		});
 
 		this.eventsub_ws_session = null;
+
+		this.message_queue = [];
+		this.messages_sent = 0;
+		this.messages_in_queue = false;
 
 		this.joins = new Map();
 
@@ -235,7 +251,7 @@ export class TwitchBot {
 		this.fault_listener = callback;
 	}
 
-	public async message(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean> {
+	private async messageSendNow(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean> {
 		let auth: TwitchBotAuth;
 		try {
 			auth = await this.getAuth();
@@ -261,6 +277,50 @@ export class TwitchBot {
 		} catch {
 			return false;
 		}
+	}
+
+	private async messageSendQueue() {
+		while (true) {
+			const message = this.message_queue.shift();
+
+			if (message) {
+				if (this.messages_sent >= GLOBAL_MESSAGES_PER_30S) {
+					setTimeout(() => {
+						this.messages_sent = 0;
+						this.messageSendQueue();
+					}, 1000 * 30);
+					break;
+				}
+
+				this.messages_sent++;
+				const res = await this.messageSendNow(message.channel_id, message.message, message.reply_to_message_id);
+				message.resolve(res);
+
+				// Sleep 1 second.
+				await new Promise((res, rej) => setTimeout(res, 1000 * (1 / CHANNEL_MESSAGES_PER_1S)));
+			} else {
+				this.messages_in_queue = false;
+				break;
+			}
+		}
+	}
+
+	private message(channel_id: string, message: string, reply_to_message_id?: string): Promise<boolean> {
+		const { promise, resolve, reject } = Promise.withResolvers<boolean>();
+
+		this.message_queue.push({
+			channel_id: channel_id,
+			message: message,
+			reply_to_message_id: reply_to_message_id,
+			resolve: resolve,
+		});
+
+		if (!this.messages_in_queue) {
+			this.messages_in_queue = true;
+			this.messageSendQueue();
+		}
+
+		return promise;
 	}
 
 	private async createJoin(auth: TwitchBotAuth, channel_id: string): Promise<TwitchBotJoin> {
