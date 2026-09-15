@@ -11,9 +11,11 @@
 	"scripts": {
 		"format": "prettier . --write",
 		"build": "tsc --build",
-		"build-all": "npm run build --workspaces && npm run build",
+		"build-lib": "npm run build --workspaces",
+		"build-all": "npm run build-lib && npm run build",
 		"clean": "tsc --build --clean",
-		"clean-all": "npm run clean --workspaces && npm run clean",
+		"clean-lib": "npm run clean --workspaces",
+		"clean-all": "npm run clean-lib && npm run clean",
 		"prestart": "npm run build-all && drizzle-kit migrate",
 		"start": "node dist/main.js"
 	},
