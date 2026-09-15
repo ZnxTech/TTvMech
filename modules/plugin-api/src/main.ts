@@ -9,6 +9,8 @@ export interface MessageEvent extends Event {
 	chatter_id: string;
 	chatter_uname: string;
 	chatter_dname: string;
+	chatter_is_sub: boolean;
+	chatter_is_mod: boolean;
 	channel_id: string;
 	channel_uname: string;
 	channel_dname: string;

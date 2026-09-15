@@ -68,6 +68,14 @@ export class TwitchBot {
 					return;
 				}
 
+				const is_sub = message.data.badges.some((badge) => {
+					return ["subscriber", "founder"].includes(badge.set_id);
+				});
+
+				const is_mod = message.data.badges.some((badge) => {
+					return ["moderator", "lead_moderator", "global_mod", "admin"].includes(badge.set_id);
+				});
+
 				this.message_listener(this, {
 					origin: "twitch",
 					text: message.data.message.text,
@@ -75,6 +83,8 @@ export class TwitchBot {
 					chatter_id: message.data.chatter_user_id,
 					chatter_uname: message.data.chatter_user_login,
 					chatter_dname: message.data.chatter_user_name,
+					chatter_is_sub: is_sub,
+					chatter_is_mod: is_mod,
 					channel_id: message.data.broadcaster_user_id,
 					channel_uname: message.data.broadcaster_user_login,
 					channel_dname: message.data.broadcaster_user_name,
