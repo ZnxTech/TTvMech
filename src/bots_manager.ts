@@ -270,6 +270,16 @@ export class BotManager {
 		this.onBotPart(plugin_bot, ev);
 	}
 
+	public addTwitchBot(twitch_bot: TwitchBot) {
+		const twitch_id = twitch_bot.getTwitchId();
+
+		this.twitch_bots.set(twitch_id, twitch_bot);
+		twitch_bot.setFaultListener(this.onTwitchBotFault);
+		twitch_bot.setMessageListener(this.onTwitchBotMessage);
+		twitch_bot.setJoinListener(this.onTwitchBotJoin);
+		twitch_bot.setPartListener(this.onTwitchBotPart);
+	}
+
 	public async init(): Promise<BotManager> {
 		this.plugins = await BotManager.loadPlugins();
 
