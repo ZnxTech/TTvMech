@@ -73,7 +73,7 @@ export class TwitchBot {
 				});
 
 				const is_mod = message.data.badges.some((badge) => {
-					return ["moderator", "lead_moderator", "global_mod", "admin"].includes(badge.set_id);
+					return ["moderator", "lead_moderator", "global_mod", "admin", "staff"].includes(badge.set_id);
 				});
 
 				this.message_listener(this, {
