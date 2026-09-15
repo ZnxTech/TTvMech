@@ -4,12 +4,14 @@ import Express from "express";
 import Qs from "qs";
 import Z from "zod";
 
-import { BotAuth } from "@ttvmech/twitch-api";
+import { BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 
 import Auth from "./auth.js";
 import { tables } from "./db_schema.js";
 import { db, Util as DBUtil } from "./db.js";
 import Meta from "./meta.js";
+import { TwitchBot } from "./bots.js";
+import { bot_manager } from "./bots_manager.js";
 
 export namespace API.V1 {
 	export const ROUTER = Express.Router();
@@ -276,7 +278,7 @@ export namespace API.V1 {
 				return res.redirect(307, `/bots?${query_str}`);
 			}
 
-			const auth = await BotAuth.request(
+			const auth = await TwitchBotAuth.request(
 				settings.client_id,
 				settings.client_secret,
 				query.data.code,
@@ -312,6 +314,9 @@ export namespace API.V1 {
 					},
 				})
 				.run();
+
+			const twitch_bot = new TwitchBot(auth, validation.user_id, validation.login, validation.login);
+			bot_manager.addTwitchBot(twitch_bot);
 
 			res.redirect(307, "/bots");
 		});
