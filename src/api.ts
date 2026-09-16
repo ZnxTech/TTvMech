@@ -4,7 +4,7 @@ import Express from "express";
 import Qs from "qs";
 import Z from "zod";
 
-import { BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
+import { Helix, BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 
 import Auth from "./auth.js";
 import { TwitchBot } from "./bots.js";
@@ -282,17 +282,29 @@ export namespace API.V1 {
 				settings.client_id,
 				settings.client_secret,
 				query.data.code,
-				`${req.protocol}://${req.host}${req.path}`
+				`${req.protocol}://${req.host}${req.baseUrl}${req.path}`
 			);
 
 			const validation = await auth.validate();
+			const users = await Helix.getUsers(auth, { ids: [validation.user_id] });
+			const [user] = users.data;
+
+			if (!user) {
+				const query_str = Qs.stringify({
+					error: "user",
+					type: "twitch",
+					message: "Could not obtain bot Twitch user information.",
+				});
+
+				return res.redirect(307, `/bots?${query_str}`);
+			}
 
 			const sql_res = db
 				.insert(tables.twitch_bots)
 				.values({
 					twitch_id: validation.user_id,
-					twitch_dname: validation.login,
 					twitch_uname: validation.login,
+					twitch_dname: user.display_name,
 					twitch_client_id: validation.client_id,
 					twitch_access_token: auth.token(),
 					twitch_refresh_token: auth.refreshToken(),
@@ -303,8 +315,8 @@ export namespace API.V1 {
 				.onConflictDoUpdate({
 					target: tables.twitch_bots.twitch_id,
 					set: {
-						twitch_dname: validation.login,
 						twitch_uname: validation.login,
+						twitch_dname: user.display_name,
 						twitch_client_id: validation.client_id,
 						twitch_access_token: auth.token(),
 						twitch_refresh_token: auth.refreshToken(),
