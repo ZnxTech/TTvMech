@@ -4,9 +4,8 @@ import NodePath from "node:path";
 import { eq, inArray } from "drizzle-orm";
 import Z from "zod";
 
-import { Plugin, PluginState, PluginBot, MessageEvent, ChannelEvent } from "@ttvmech/plugin-api";
+import { ChannelEvent, MessageEvent, Plugin, PluginBot, PluginState } from "@ttvmech/plugin-api";
 import { PLUGIN_SCHEMA } from "@ttvmech/plugin-api/schemas";
-
 import { BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 
 import { TwitchBot } from "./bots.js";

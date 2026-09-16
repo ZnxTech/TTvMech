@@ -2,12 +2,12 @@ import CookieParser from "cookie-parser";
 import Express from "express";
 import Qs from "qs";
 
-import Meta from "./meta.js";
-import { tables } from "./db_schema.js";
-import { db, Util as DBUtil } from "./db.js";
 import API from "./api.js";
-import HTMX from "./htmx.js";
 import Auth from "./auth.js";
+import { Util as DBUtil, db } from "./db.js";
+import { tables } from "./db_schema.js";
+import HTMX from "./htmx.js";
+import Meta from "./meta.js";
 
 export const app = Express();
 

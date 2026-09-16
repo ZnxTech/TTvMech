@@ -1,10 +1,10 @@
 import NodeCrypto from "node:crypto";
 
+import { eq, inArray, lte } from "drizzle-orm";
 import Express from "express";
-import { eq, lte, inArray } from "drizzle-orm";
 
-import { tables } from "./db_schema.js";
 import { db } from "./db.js";
+import { tables } from "./db_schema.js";
 
 export namespace Auth {
 	function createSessionId(): string {

@@ -1,9 +1,13 @@
 {
+	"plugins": ["@trivago/prettier-plugin-sort-imports"],
 	"printWidth": 120,
 	"tabWidth": 4,
 	"useTabs": true,
 	"semi": true,
 	"singleQuote": false,
 	"quoteProps": "preserve",
-	"trailingComma": "es5"
+	"trailingComma": "es5",
+	"importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "^@ttvmech/(.*)$", "^[./]"],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true
 }

@@ -1,6 +1,6 @@
 import Z from "zod";
 
-import { AuthSchemas, APISchemas } from "./schemas.js";
+import { APISchemas, AuthSchemas } from "./schemas.js";
 
 export class Auth {
 	protected constructor(

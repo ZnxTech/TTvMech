@@ -7,11 +7,11 @@ import Z from "zod";
 import { BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 
 import Auth from "./auth.js";
-import { tables } from "./db_schema.js";
-import { db, Util as DBUtil } from "./db.js";
-import Meta from "./meta.js";
 import { TwitchBot } from "./bots.js";
 import { bot_manager } from "./bots_manager.js";
+import { Util as DBUtil, db } from "./db.js";
+import { tables } from "./db_schema.js";
+import Meta from "./meta.js";
 
 export namespace API.V1 {
 	export const ROUTER = Express.Router();

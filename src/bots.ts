@@ -1,9 +1,8 @@
 import { eq } from "drizzle-orm";
 import Z from "zod";
 
-import { PluginBot, MessageEvent, ChannelEvent } from "@ttvmech/plugin-api";
-
-import { BotAuth as TwitchBotAuth, Helix, EventSub } from "@ttvmech/twitch-api";
+import { ChannelEvent, MessageEvent, PluginBot } from "@ttvmech/plugin-api";
+import { EventSub, Helix, BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 import { EventSubWebSocket, EventSubWebSocketSession } from "@ttvmech/twitch-api/eventsub";
 import { EventSubSchemas } from "@ttvmech/twitch-api/schemas";
 

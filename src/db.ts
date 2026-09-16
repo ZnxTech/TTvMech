@@ -3,8 +3,8 @@ import { DatabaseSync, StatementResultingChanges } from "node:sqlite";
 import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-sqlite";
 
-import Meta from "./meta.js";
 import { tables } from "./db_schema.js";
+import Meta from "./meta.js";
 
 const node_db = new DatabaseSync(Meta.META_DB_PATH, { open: true });
 node_db.exec("PRAGMA journal_mode = WAL;");

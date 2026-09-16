@@ -1,9 +1,9 @@
-import Express from "express";
 import { eq } from "drizzle-orm";
+import Express from "express";
 
 import Auth from "./auth.js";
-import { tables } from "./db_schema.js";
 import { db } from "./db.js";
+import { tables } from "./db_schema.js";
 
 export namespace HTMX.V1 {
 	export const ROUTER = Express.Router();
