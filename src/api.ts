@@ -17,7 +17,7 @@ export namespace API.V1 {
 	export const ROUTER = Express.Router();
 
 	ROUTER.route("/meta/init").post((req, res) => {
-		if (DBUtil.isInit(true)) {
+		if (DBUtil.settingsIsInit(true)) {
 			res.sendStatus(403);
 		}
 
@@ -196,12 +196,12 @@ export namespace API.V1 {
 			return res.status(400).send("Invalid request body.");
 		}
 
-		DBUtil.settingsUpdateCommon(
-			body.data.cmd_prefix,
-			body.data.root_path,
-			body.data.mod_score,
-			body.data.ban_score
-		);
+		DBUtil.settingsUpdate({
+			cmd_prefix: body.data.cmd_prefix,
+			root_path: body.data.root_path,
+			mod_score: body.data.mod_score,
+			ban_score: body.data.ban_score,
+		});
 		res.sendStatus(200);
 	});
 

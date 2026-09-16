@@ -11,8 +11,31 @@ node_db.exec("PRAGMA journal_mode = WAL;");
 
 export const db = drizzle({ client: node_db });
 
+// Check if settings exist in table, if not insert default.
+const settings = db
+	.select({
+		id: tables.settings.id,
+	})
+	.from(tables.settings)
+	.where(eq(tables.settings.id, 0))
+	.get();
+
+if (!settings) {
+	const sql_res = db
+		.insert(tables.settings)
+		.values({
+			id: 0,
+			init: false,
+		})
+		.run();
+
+	if (sql_res.changes === 0) {
+		throw new Error("Settings could not be initialized");
+	}
+}
+
 export namespace Util {
-	export function isInit(fail_as: boolean): boolean {
+	export function settingsIsInit(fail_as: boolean): boolean {
 		const settings = db
 			.select({
 				init: tables.settings.init,
@@ -30,50 +53,32 @@ export namespace Util {
 
 	export function settingsUpdateClient(client_id: string, client_secret: string): StatementResultingChanges {
 		const sql_res = db
-			.insert(tables.settings)
-			.values({
-				id: 0,
-				init: false,
+			.update(tables.settings)
+			.set({
 				twitch_client_id: client_id,
 				twitch_client_secret: client_secret,
 			})
-			.onConflictDoUpdate({
-				target: tables.settings.id,
-				set: {
-					twitch_client_id: client_id,
-					twitch_client_secret: client_secret,
-				},
-			})
+			.where(eq(tables.settings.id, 0))
 			.run();
 
 		return sql_res;
 	}
 
-	export function settingsUpdateCommon(
-		cmd_prefix: string,
-		root_path: string,
-		mod_score: number,
-		ban_score: number
-	): StatementResultingChanges {
+	export function settingsUpdate(opt: {
+		cmd_prefix?: string;
+		root_path?: string;
+		mod_score?: number;
+		ban_score?: number;
+	}): StatementResultingChanges {
 		const sql_res = db
-			.insert(tables.settings)
-			.values({
-				id: 0,
-				init: false,
-				cmd_prefix: cmd_prefix,
-				root_path: root_path,
-				mod_score: mod_score,
-				ban_score: ban_score,
+			.update(tables.settings)
+			.set({
+				cmd_prefix: opt.cmd_prefix,
+				root_path: opt.root_path,
+				mod_score: opt.mod_score,
+				ban_score: opt.ban_score,
 			})
-			.onConflictDoUpdate({
-				target: tables.settings.id,
-				set: {
-					cmd_prefix: cmd_prefix,
-					root_path: root_path,
-					mod_score: mod_score,
-					ban_score: ban_score,
-				},
-			})
+			.where(eq(tables.settings.id, 0))
 			.run();
 
 		return sql_res;
@@ -81,15 +86,11 @@ export namespace Util {
 
 	export function settingsSetInitialized(): StatementResultingChanges {
 		const sql_res = db
-			.insert(tables.settings)
-			.values({
-				id: 0,
+			.update(tables.settings)
+			.set({
 				init: true,
 			})
-			.onConflictDoUpdate({
-				target: tables.settings.id,
-				set: { init: true },
-			})
+			.where(eq(tables.settings.id, 0))
 			.run();
 
 		return sql_res;

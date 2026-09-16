@@ -31,7 +31,7 @@ app.use("/htmx/v1", HTMX.V1.ROUTER);
 
 function middleInitRedirect(need_init: boolean, route: string): Express.RequestHandler {
 	return (req, res, next) => {
-		if (DBUtil.isInit(false) === need_init) {
+		if (DBUtil.settingsIsInit(false) === need_init) {
 			next();
 		} else {
 			res.redirect(route);
