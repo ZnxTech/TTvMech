@@ -282,6 +282,12 @@ export class BotManager {
 
 	public async init(): Promise<BotManager> {
 		this.plugins = await BotManager.loadPlugins();
+		this.plugins.forEach((plugin) => {
+			if (plugin.onLoad) {
+				const plugin_state = BotManager.getPluginState();
+				plugin.onLoad(plugin_state);
+			}
+		});
 
 		const commands = BotManager.loadCommands();
 		commands.forEach((command) => {
