@@ -279,6 +279,10 @@ export class BotManager {
 		twitch_bot.setPartListener(this.onTwitchBotPart);
 	}
 
+	public removeTwitchBot(twitch_id: string) {
+		this.twitch_bots.delete(twitch_id);
+	}
+
 	public async init(): Promise<BotManager> {
 		this.plugins = await BotManager.loadPlugins();
 		this.plugins.forEach((plugin) => {

@@ -391,6 +391,7 @@ export namespace API.V1 {
 		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
 			const twitch_id = req.params.twitch_id;
 
+			bot_manager.removeTwitchBot(twitch_id);
 			const sql_res = db.delete(tables.twitch_bots).where(eq(tables.twitch_bots.twitch_id, twitch_id)).run();
 
 			if (sql_res.changes == 0) {
