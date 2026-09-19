@@ -11,15 +11,16 @@ export namespace HTMX.V1 {
 	ROUTER.route("/bots").get(Auth.middleSessionAuth(true, true), (req, res) => {
 		const bots = db
 			.select({
-				twitch_id: tables.twitch_bots.twitch_id,
-				twitch_uname: tables.twitch_bots.twitch_uname,
-				twitch_dname: tables.twitch_bots.twitch_dname,
+				id: tables.twitch_bots.twitch_id,
+				uname: tables.twitch_bots.twitch_uname,
+				dname: tables.twitch_bots.twitch_dname,
+				faulty: tables.twitch_bots.faulty,
 			})
 			.from(tables.twitch_bots)
 			.orderBy(tables.twitch_bots.twitch_id)
 			.all();
 
-		res.status(200).render("elements/bots.ejs", { bots: bots });
+		res.render("elements/bots.ejs", { bots: bots });
 	});
 
 	ROUTER.route("/users").get(Auth.middleSessionAuth(true, true), (req, res) => {
@@ -34,7 +35,7 @@ export namespace HTMX.V1 {
 			.orderBy(tables.users.uuid)
 			.all();
 
-		res.status(200).render("elements/users.ejs", { users: users });
+		res.render("elements/users.ejs", { users: users });
 	});
 
 	ROUTER.route("/settings").get(Auth.middleSessionAuth(true, true), (req, res) => {
@@ -53,12 +54,12 @@ export namespace HTMX.V1 {
 			return res.sendStatus(500);
 		}
 
-		res.status(200).render("elements/settings.ejs", { settings: settings });
+		res.render("elements/settings.ejs", { settings: settings });
 	});
 
 	ROUTER.route("/routes").get((req, res) => {
 		const session = res.locals.session as Auth.Session | undefined;
-		res.status(200).render("elements/routes.ejs", { session: session });
+		res.render("elements/routes.ejs", { session: session });
 	});
 }
 

@@ -1,10 +1,16 @@
 <% for (bot of bots) { %>
-    <div class="flx box row m-start x-center g-1">
-        <div class="box tx-b mrg-auto-right"><%= user.name %></div>
-        <!-- <div class="bg-red btn tx-b"
-            hx-delete="/api/v1/users/<%= user.uuid %>"
-            hx-swap="none">
+    <div id="bot-twitch-<%= bot.id %>" class="flx box row m-start x-center g-1">
+        <div class="box tx-b bg-twitch">Twitch</div>
+        <div class="box tx-b"><%= bot.dname %></div>
+        <i class="box mrg-auto-right"><%= bot.id %></i>
+        <% if (bot.faulty) { %>
+            <div class="box tx-b bg-red">Faulty!</div>
+        <% } %>
+        <div class="box btn tx-b bg-red"
+            hx-delete="/api/v1/bots/twitch/<%= bot.id %>"
+            hx-target="#bot-twitch-<%= bot.id %>"
+            hx-swap="delete">
             Delete
-        </div> -->
+        </div>
     </div>
 <% } %>
