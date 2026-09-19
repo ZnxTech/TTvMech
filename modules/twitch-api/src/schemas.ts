@@ -161,8 +161,8 @@ export namespace APISchemas {
 		type: Z.enum(["admin", "global_mod", "staff", ""]),
 		broadcaster_type: Z.enum(["affiliate", "partner", ""]),
 		description: Z.string(),
-		profile_image_url: Z.url(),
-		offline_image_url: Z.url(),
+		profile_image_url: Z.xor([Z.literal(""), Z.url()]),
+		offline_image_url: Z.xor([Z.literal(""), Z.url()]),
 		view_count: Z.number(), // Deprecated: will return an invalid value.
 		email: Z.string().optional(),
 		created_at: Z.iso.datetime(),
