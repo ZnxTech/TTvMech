@@ -119,7 +119,8 @@ export class BotManager {
 			.get();
 
 		if (!settings || !settings.client_id) {
-			throw new Error("Could not obtain client id");
+			// throw new Error("Could not obtain client id");
+			return [];
 		}
 
 		const twitch_client_id = settings.client_id;
