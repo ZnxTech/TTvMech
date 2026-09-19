@@ -1,36 +1,50 @@
 :root {
 	/* Base colors */
-	--color-bw1: #f0f0f0;
-	--color-bw2: #c0c0c0;
-	--color-bw3: #808080;
-	--color-bw4: #404040;
-	--color-bw5: #202020;
-	--color-bw6: #101010;
-	--color-bw7: #000000;
+	--color-bw-base: oklch(35% 0 0);
+	--color-bw1: color-mix(in oklch, var(--color-bw-base) 0%, white 100%);
+	--color-bw2: color-mix(in oklch, var(--color-bw-base) 50%, white 50%);
+	--color-bw3: color-mix(in oklch, var(--color-bw-base) 67%, white 33%);
+	--color-bw4: var(--color-bw-base);
+	--color-bw5: color-mix(in oklch, var(--color-bw-base) 67%, black 33%);
+	--color-bw6: color-mix(in oklch, var(--color-bw-base) 50%, black 50%);
+	--color-bw7: color-mix(in oklch, var(--color-bw-base) 0%, black 100%);
 
-	--color-red1: #f0f0f0;
-	--color-red2: #f0c0c0;
-	--color-red3: #f08080;
-	--color-red4: #804040;
-	--color-red5: #402020;
-	--color-red6: #201010;
-	--color-red7: #000000;
+	--color-red-base: #aa4444;
+	--color-red1: color-mix(in oklch, var(--color-red-base) 0%, white 100%);
+	--color-red2: color-mix(in oklch, var(--color-red-base) 50%, white 50%);
+	--color-red3: color-mix(in oklch, var(--color-red-base) 67%, white 33%);
+	--color-red4: var(--color-red-base);
+	--color-red5: color-mix(in oklch, var(--color-red-base) 67%, black 33%);
+	--color-red6: color-mix(in oklch, var(--color-red-base) 50%, black 50%);
+	--color-red7: color-mix(in oklch, var(--color-red-base) 0%, black 100%);
 
-	--color-orange1: #f0f0f0;
-	--color-orange2: #f0f0c0;
-	--color-orange3: #f0c080;
-	--color-orange4: #806040;
-	--color-orange5: #403020;
-	--color-orange6: #201810;
-	--color-orange7: #000000;
+	--color-orange-base: #ffaa44;
+	--color-orange1: color-mix(in oklch, var(--color-orange-base) 0%, white 100%);
+	--color-orange2: color-mix(in oklch, var(--color-orange-base) 50%, white 50%);
+	--color-orange3: color-mix(in oklch, var(--color-orange-base) 67%, white 33%);
+	--color-orange4: var(--color-orange-base);
+	--color-orange5: color-mix(in oklch, var(--color-orange-base) 67%, black 33%);
+	--color-orange6: color-mix(in oklch, var(--color-orange-base) 50%, black 50%);
+	--color-orange7: color-mix(in oklch, var(--color-orange-base) 0%, black 100%);
 
-	--color-green1: #f0f0f0;
-	--color-green2: #c0f0c0;
-	--color-green3: #80f080;
-	--color-green4: #408040;
-	--color-green5: #204020;
-	--color-green6: #102010;
-	--color-green7: #000000;
+	--color-green-base: #44aa44;
+	--color-green1: color-mix(in oklch, var(--color-green-base) 0%, white 100%);
+	--color-green2: color-mix(in oklch, var(--color-green-base) 50%, white 50%);
+	--color-green3: color-mix(in oklch, var(--color-green-base) 67%, white 33%);
+	--color-green4: var(--color-green-base);
+	--color-green5: color-mix(in oklch, var(--color-green-base) 67%, black 33%);
+	--color-green6: color-mix(in oklch, var(--color-green-base) 50%, black 50%);
+	--color-green7: color-mix(in oklch, var(--color-green-base) 0%, black 100%);
+
+	/* Branded colors */
+	--color-twitch-base: #9146ff;
+	--color-twitch1: color-mix(in oklch, var(--color-twitch-base) 0%, white 100%);
+	--color-twitch2: color-mix(in oklch, var(--color-twitch-base) 50%, white 50%);
+	--color-twitch3: color-mix(in oklch, var(--color-twitch-base) 67%, white 33%);
+	--color-twitch4: var(--color-twitch-base);
+	--color-twitch5: color-mix(in oklch, var(--color-twitch-base) 67%, black 33%);
+	--color-twitch6: color-mix(in oklch, var(--color-twitch-base) 50%, black 50%);
+	--color-twitch7: color-mix(in oklch, var(--color-twitch-base) 0%, black 100%);
 
 	/* Colors */
 	--color-bg1: var(--color-bw1);
@@ -74,4 +88,14 @@
 	--color-bg5: var(--color-green5);
 	--color-bg6: var(--color-green6);
 	--color-bg7: var(--color-green7);
+}
+
+.bg-twitch {
+	--color-bg1: var(--color-twitch1);
+	--color-bg2: var(--color-twitch2);
+	--color-bg3: var(--color-twitch3);
+	--color-bg4: var(--color-twitch4);
+	--color-bg5: var(--color-twitch5);
+	--color-bg6: var(--color-twitch6);
+	--color-bg7: var(--color-twitch7);
 }
