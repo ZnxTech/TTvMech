@@ -88,7 +88,7 @@ input:where([type="text"], [type="password"], [type="number"], ):focus {
 }
 
 input:where([type="radio"], ) {
-	accent-color: var(--color-green3);
+	accent-color: var(--color-green4);
 	cursor: pointer;
 }
 
