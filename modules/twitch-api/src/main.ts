@@ -196,7 +196,7 @@ export namespace Helix {
 			throw new Error("Failed to send chat message");
 		}
 
-		const json = APISchemas.SEND_CHAT_MESSAGE.safeParse(res.body);
+		const json = APISchemas.SEND_CHAT_MESSAGE.safeParse(await res.json());
 		if (json.success) {
 			return json.data;
 		} else {
@@ -246,7 +246,7 @@ export namespace Helix {
 			throw new Error("Failed to create an EventSub");
 		}
 
-		const json = APISchemas.CREATE_EVENTSUB.safeParse(res.body);
+		const json = APISchemas.CREATE_EVENTSUB.safeParse(await res.json());
 		if (json.success) {
 			return json.data;
 		} else {
@@ -302,7 +302,7 @@ export namespace Helix {
 			throw new Error("Failed to get EventSubs");
 		}
 
-		const json = APISchemas.GET_EVENTSUB.safeParse(res.body);
+		const json = APISchemas.GET_EVENTSUB.safeParse(await res.json());
 		if (json.success) {
 			return json.data;
 		} else {
@@ -341,7 +341,7 @@ export namespace Helix {
 			throw new Error("Failed to get users");
 		}
 
-		const json = APISchemas.GET_STREAMS.safeParse(res.body);
+		const json = APISchemas.GET_STREAMS.safeParse(await res.json());
 		if (json.success) {
 			return json.data;
 		} else {
@@ -357,27 +357,29 @@ export namespace Helix {
 			logins?: string[];
 		}
 	): Promise<Z.infer<typeof APISchemas.GET_USERS>> {
-		const body = new URLSearchParams();
-		data.ids?.forEach((id) => body.append("id", id));
-		data.logins?.forEach((login) => body.append("login", login));
+		const url = new URL("https://api.twitch.tv/helix/users");
+		data.ids?.forEach((id) => url.searchParams.append("id", id));
+		data.logins?.forEach((login) => url.searchParams.append("login", login));
 
-		const res = await fetch("https://api.twitch.tv/helix/users", {
+		const res = await fetch(url, {
 			method: "GET",
 			headers: {
 				"Authorization": `Bearer ${auth.token()}`,
 				"Client-Id": auth.clientId(),
 			},
-			body: body,
 		});
 
 		if (!res.ok) {
 			throw new Error("Failed to get users");
 		}
 
-		const json = APISchemas.GET_USERS.safeParse(res.body);
+		const body = await res.json();
+
+		const json = APISchemas.GET_USERS.safeParse(body);
 		if (json.success) {
 			return json.data;
 		} else {
+			console.log(json.error.message, body);
 			throw new Error("Invalid users json recived");
 		}
 	}
