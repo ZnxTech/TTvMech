@@ -232,6 +232,8 @@ input:where([type="radio"], ) {
 	background: var(--color-bg4);
 	border-color: var(--color-bg3);
 	cursor: pointer;
+
+	box-shadow: 0 0 0.5rem var(--color-bg4);
 }
 .btn:active {
 	background: var(--color-bg3);
