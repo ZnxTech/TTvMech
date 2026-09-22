@@ -69,7 +69,7 @@ label {
 	user-select: none;
 }
 
-input:where([type="text"], [type="password"], [type="number"], ) {
+input:where([type="text"], [type="password"], [type="number"]), textarea {
 	flex: 1 1;
 	background: var(--color-bg7);
 	border: var(--color-bg4) solid 2px;
@@ -77,12 +77,14 @@ input:where([type="text"], [type="password"], [type="number"], ) {
 	font-size: 1rem;
 	padding: 0.5rem;
 	caret-color: var(--color-tx1);
+
+	resize: none;
 }
-input:where([type="text"], [type="password"], [type="number"], ):hover {
+input:where([type="text"], [type="password"], [type="number"]):hover, textarea:hover {
 	background: var(--color-bg6);
 	border-color: var(--color-bg3);
 }
-input:where([type="text"], [type="password"], [type="number"], ):focus {
+input:where([type="text"], [type="password"], [type="number"]):focus, textarea:focus {
 	background: var(--color-bg7);
 	border-color: var(--color-bg3);
 }
