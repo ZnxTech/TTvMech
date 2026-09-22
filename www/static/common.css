@@ -73,6 +73,7 @@ input:where([type="text"], [type="password"], [type="number"]), textarea {
 	flex: 1 1;
 	background: var(--color-bg7);
 	border: var(--color-bg4) solid 2px;
+	width: 100%;
 
 	font-size: 1rem;
 	padding: 0.5rem;
