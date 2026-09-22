@@ -61,6 +61,11 @@ export namespace HTMX.V1 {
 		const session = res.locals.session as Auth.Session | undefined;
 		res.render("elements/routes.ejs", { session: session });
 	});
+
+	ROUTER.route("*path").get((req, res) => {
+		const error = `Could not retrive endpoint "${req.params.path.join("/")}"`;
+		res.render("elements/error.ejs", { error: error });
+	});
 }
 
 export default HTMX;
