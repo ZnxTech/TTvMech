@@ -23,6 +23,8 @@ body {
 	flex: 5;
 	padding: 0.5rem;
 
+	min-width: min-content;
+
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
