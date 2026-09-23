@@ -18,18 +18,22 @@ interface Command {
 	active: boolean;
 	req_score: number;
 	user_cooldown: number;
-	user_cooldowns: Map<string, Date>;
 	chat_cooldown: number;
-	chat_cooldowns: Map<string, Date>;
 	description: string;
 	response: string;
+}
+
+interface CommandCooldown {
+	user_cooldowns: Map<string, Date>;
+	chat_cooldowns: Map<string, Date>;
 }
 
 export class BotManager {
 	private plugins: Plugin[];
 
-	private command_prefix: string;
 	private commands: Map<string, Command>;
+	private command_prefix: string;
+	private command_cooldowns: Map<string, CommandCooldown>;
 
 	private twitch_bots: Map<string, TwitchBot>;
 	// private youtube_bots:
@@ -40,6 +44,7 @@ export class BotManager {
 
 		this.commands = new Map();
 		this.command_prefix = "!";
+		this.command_cooldowns = new Map();
 
 		this.twitch_bots = new Map();
 	}
@@ -69,9 +74,7 @@ export class BotManager {
 					active: data.active,
 					req_score: data.req_score,
 					user_cooldown: data.user_cooldown,
-					user_cooldowns: new Map(),
 					chat_cooldown: data.chat_cooldown,
-					chat_cooldowns: new Map(),
 					description: data.description,
 					response: data.response,
 				};
@@ -174,8 +177,9 @@ export class BotManager {
 		if (prefixed_trigger && prefixed_trigger.startsWith(this.command_prefix)) {
 			const trigger = prefixed_trigger.replace(this.command_prefix, "");
 			const command = this.commands.get(trigger);
+			const cooldowns = this.command_cooldowns.get(trigger);
 
-			if (!command) {
+			if (!command || !command.active || !cooldowns) {
 				return;
 			}
 
@@ -184,8 +188,8 @@ export class BotManager {
 			const user_cooldown_id = `${ev.origin}:${ev.chatter_id}`;
 			const chat_cooldown_id = `${ev.origin}:${ev.channel_id}`;
 
-			const user_cooldown = command.user_cooldowns.get(user_cooldown_id);
-			const chat_cooldown = command.chat_cooldowns.get(chat_cooldown_id);
+			const user_cooldown = cooldowns.user_cooldowns.get(user_cooldown_id);
+			const chat_cooldown = cooldowns.chat_cooldowns.get(chat_cooldown_id);
 
 			if (user_cooldown && user_cooldown.getTime() > Date.now()) {
 				return;
@@ -209,12 +213,12 @@ export class BotManager {
 
 			if (command.user_cooldown > 0) {
 				const cooldown = new Date(Date.now() + command.user_cooldown);
-				command.user_cooldowns.set(user_cooldown_id, cooldown);
+				cooldowns.user_cooldowns.set(user_cooldown_id, cooldown);
 			}
 
 			if (command.chat_cooldown > 0) {
 				const cooldown = new Date(Date.now() + command.chat_cooldown);
-				command.chat_cooldowns.set(chat_cooldown_id, cooldown);
+				cooldowns.chat_cooldowns.set(chat_cooldown_id, cooldown);
 			}
 		}
 	}
@@ -295,6 +299,10 @@ export class BotManager {
 		commands.forEach((command) => {
 			if (!this.commands.has(command.trigger)) {
 				this.commands.set(command.trigger, command);
+				this.command_cooldowns.set(command.trigger, {
+					user_cooldowns: new Map(),
+					chat_cooldowns: new Map(),
+				});
 			}
 		});
 
