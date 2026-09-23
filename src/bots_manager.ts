@@ -286,6 +286,19 @@ export class BotManager {
 		this.twitch_bots.delete(twitch_id);
 	}
 
+	public addCommand(command: Command) {
+		this.commands.set(command.trigger, command);
+		this.command_cooldowns.set(command.trigger, {
+			user_cooldowns: new Map(),
+			chat_cooldowns: new Map(),
+		});
+	}
+
+	public removeCommand(command_trigger: string) {
+		this.commands.delete(command_trigger);
+		this.command_cooldowns.delete(command_trigger);
+	}
+
 	public async init(): Promise<BotManager> {
 		this.plugins = await BotManager.loadPlugins();
 		this.plugins.forEach((plugin) => {
