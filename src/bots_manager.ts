@@ -21,7 +21,6 @@ interface Command {
 	user_cooldowns: Map<string, Date>;
 	chat_cooldown: number;
 	chat_cooldowns: Map<string, Date>;
-	name: string;
 	description: string;
 	response: string;
 }
@@ -73,7 +72,6 @@ export class BotManager {
 					user_cooldowns: new Map(),
 					chat_cooldown: data.chat_cooldown,
 					chat_cooldowns: new Map(),
-					name: data.name,
 					description: data.description,
 					response: data.response,
 				};

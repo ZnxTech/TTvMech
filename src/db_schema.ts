@@ -91,7 +91,6 @@ export const table_commands = sqliteTable("commands", (t) => ({
 	req_score: t.integer().notNull(),
 	user_cooldown: t.integer().notNull(),
 	chat_cooldown: t.integer().notNull(),
-	name: t.text().notNull().unique(),
 	description: t.text().notNull(),
 	response: t.text().notNull(),
 }));
