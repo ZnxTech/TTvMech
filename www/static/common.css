@@ -98,6 +98,72 @@ input:where([type="radio"], ) {
 	cursor: pointer;
 }
 
+select {
+	appearance: base-select;
+
+	flex: 1 1;
+	background: var(--color-bg7);
+	border: var(--color-bg4) solid 2px;
+	border-radius: 0;
+
+	font-size: 1rem;
+	padding: 0.5rem;
+}
+select::picker-icon {
+	content: "v";
+	transition: 50ms ease;
+}
+select:open::picker-icon {
+	rotate: 180deg;
+}
+
+select::picker(select) {
+	appearance: base-select;
+
+	background: var(--color-bg6);
+	border: none;
+
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+
+	font-size: 1rem;
+	padding: 2px;
+}
+select:not(:open)::picker(select) {
+	/* fix displaying when closed */
+	display: none;
+}
+
+option {
+	/* use outline instead of border for "border sharing" */
+	background: var(--color-bg5);
+	outline: var(--color-bg4) solid 2px;
+
+	color: var(--color-tx1);
+
+	padding: 0.5rem;
+}
+option:hover {
+	background: var(--color-bg4);
+	outline: var(--color-bg3) solid 2px;
+
+	/* increase z-index from 0 to 1 to overlay this elem's outline over others */
+	z-index: 1;
+
+	box-shadow: 0 0 0.25rem var(--color-bg4);
+}
+
+option:not(:checked)::before {
+	content: "[ ]";
+}
+option:checked::before {
+	content: "[x]";
+}
+option::checkmark {
+	display: none;
+}
+
 /* Classes */
 
 .tx-i {
