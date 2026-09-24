@@ -242,6 +242,54 @@ input:where([type="radio"], ) {
 	background: var(--color-bg3);
 	border-color: var(--color-bg2);
 }
+.btn:disabled {
+	background: var(--color-bg6);
+	border-color: var(--color-bg5);
+
+	color: var(--color-tx3);
+
+	cursor: inherit;
+	box-shadow: none;
+}
+
+.clp {
+	display: none;
+}
+.clp-chk {
+	display: none;
+}
+:is(.clp-chk:checked, :has(.clp-chk:checked)) + .clp {
+	display: flex;
+}
+
+.rad-btn {
+	background: var(--color-bg5);
+	border: var(--color-bg4) solid 2px;
+
+	padding: 0.5rem;
+
+	text-decoration: none;
+	user-select: none;
+}
+.rad-btn:has(.rad-chk:checked),
+.rad-btn:hover {
+	background: var(--color-bg4);
+	border-color: var(--color-bg3);
+
+	cursor: pointer;
+	box-shadow: 0 0 0.25rem var(--color-bg4);
+}
+
+.rad-btn::before {
+	content: "[ ]";
+}
+.rad-btn:has(.rad-chk:checked)::before {
+	content: "[x]";
+}
+
+.rad-chk {
+	display: none;
+}
 
 /* Special IDs */
 
