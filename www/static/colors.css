@@ -46,6 +46,24 @@
 	--color-twitch6: color-mix(in oklch, var(--color-twitch-base) 50%, black 50%);
 	--color-twitch7: color-mix(in oklch, var(--color-twitch-base) 0%, black 100%);
 
+	--color-youtube-base: #ff0000;
+	--color-youtube1: color-mix(in oklch, var(--color-youtube-base) 0%, white 100%);
+	--color-youtube2: color-mix(in oklch, var(--color-youtube-base) 50%, white 50%);
+	--color-youtube3: color-mix(in oklch, var(--color-youtube-base) 67%, white 33%);
+	--color-youtube4: var(--color-youtube-base);
+	--color-youtube5: color-mix(in oklch, var(--color-youtube-base) 67%, black 33%);
+	--color-youtube6: color-mix(in oklch, var(--color-youtube-base) 50%, black 50%);
+	--color-youtube7: color-mix(in oklch, var(--color-youtube-base) 0%, black 100%);
+
+	--color-kick-base: #00e701;
+	--color-kick1: color-mix(in oklch, var(--color-kick-base) 0%, white 100%);
+	--color-kick2: color-mix(in oklch, var(--color-kick-base) 50%, white 50%);
+	--color-kick3: color-mix(in oklch, var(--color-kick-base) 67%, white 33%);
+	--color-kick4: var(--color-kick-base);
+	--color-kick5: color-mix(in oklch, var(--color-kick-base) 67%, black 33%);
+	--color-kick6: color-mix(in oklch, var(--color-kick-base) 50%, black 50%);
+	--color-kick7: color-mix(in oklch, var(--color-kick-base) 0%, black 100%);
+
 	/* Colors */
 	--color-bg1: var(--color-bw1);
 	--color-bg2: var(--color-bw2);
@@ -98,4 +116,24 @@
 	--color-bg5: var(--color-twitch5);
 	--color-bg6: var(--color-twitch6);
 	--color-bg7: var(--color-twitch7);
+}
+
+.bg-youtube {
+	--color-bg1: var(--color-youtube1);
+	--color-bg2: var(--color-youtube2);
+	--color-bg3: var(--color-youtube3);
+	--color-bg4: var(--color-youtube4);
+	--color-bg5: var(--color-youtube5);
+	--color-bg6: var(--color-youtube6);
+	--color-bg7: var(--color-youtube7);
+}
+
+.bg-kick {
+	--color-bg1: var(--color-kick1);
+	--color-bg2: var(--color-kick2);
+	--color-bg3: var(--color-kick3);
+	--color-bg4: var(--color-kick4);
+	--color-bg5: var(--color-kick5);
+	--color-bg6: var(--color-kick6);
+	--color-bg7: var(--color-kick7);
 }
