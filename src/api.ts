@@ -22,10 +22,10 @@ export namespace API.V1 {
 		}
 
 		const body = Z.object({
-			client_id: Z.string(),
-			client_secret: Z.string(),
-			admin_name: Z.string(),
-			admin_pass: Z.string(),
+			client_id: Z.string().trim().nonempty(),
+			client_secret: Z.string().trim().nonempty(),
+			admin_name: Z.string().trim().min(3).max(64),
+			admin_pass: Z.string().trim().min(8).max(64),
 		}).safeParse(req.body);
 
 		if (!body.success) {
@@ -58,8 +58,8 @@ export namespace API.V1 {
 		})
 		.post(Auth.middleSessionAuth(true, true), (req, res) => {
 			const body = Z.object({
-				user_name: Z.string().min(3).max(64),
-				user_pass: Z.string().min(8).max(64),
+				user_name: Z.string().trim().min(3).max(64),
+				user_pass: Z.string().trim().min(8).max(64),
 				user_rank: Z.enum(["none", "admin", "super_admin"]),
 			}).safeParse(req.body);
 
@@ -79,8 +79,8 @@ export namespace API.V1 {
 	ROUTER.route("/users/auth")
 		.post((req, res) => {
 			const body = Z.object({
-				user_name: Z.string(),
-				user_pass: Z.string(),
+				user_name: Z.string().trim().min(3).max(64),
+				user_pass: Z.string().trim().min(8).max(64),
 			}).safeParse(req.body);
 
 			if (!body.success) {
@@ -186,7 +186,7 @@ export namespace API.V1 {
 
 	ROUTER.route("/settings").put(Auth.middleSessionAuth(true, true), (req, res) => {
 		const body = Z.object({
-			cmd_prefix: Z.string(),
+			cmd_prefix: Z.string().trim().min(1).max(64),
 			root_path: Z.string(),
 			mod_score: Z.coerce.number().int(),
 			ban_score: Z.coerce.number().int(),
@@ -207,8 +207,8 @@ export namespace API.V1 {
 
 	ROUTER.route("/settings/client").put(Auth.middleSessionAuth(true, true), (req, res) => {
 		const body = Z.object({
-			client_id: Z.string(),
-			client_secret: Z.string(),
+			client_id: Z.string().trim(),
+			client_secret: Z.string().trim(),
 		}).safeParse(req.body);
 
 		if (!body.success) {
