@@ -72,7 +72,7 @@ label {
 input:where([type="text"], [type="password"], [type="number"]),
 textarea {
 	flex: 1 1;
-	background: var(--color-bg7);
+	background: var(--color-bg6);
 	border: var(--color-bg4) solid 2px;
 	width: 100%;
 
@@ -84,12 +84,12 @@ textarea {
 }
 input:where([type="text"], [type="password"], [type="number"]):hover,
 textarea:hover {
-	background: var(--color-bg6);
+	background: var(--color-bg5);
 	border-color: var(--color-bg3);
 }
 input:where([type="text"], [type="password"], [type="number"]):focus,
 textarea:focus {
-	background: var(--color-bg7);
+	background: var(--color-bg6);
 	border-color: var(--color-bg3);
 }
 
