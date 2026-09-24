@@ -294,6 +294,40 @@ export class BotManager {
 		});
 	}
 
+	public editCommand(
+		command_trigger: string,
+		command_opts: {
+			req_score?: number;
+			user_cooldown?: number;
+			chat_cooldown?: number;
+			description?: string;
+			response?: string;
+		}
+	) {
+		const command = this.commands.get(command_trigger);
+		if (command) {
+			if (command_opts.req_score) {
+				command.req_score = command_opts.req_score;
+			}
+
+			if (command_opts.user_cooldown) {
+				command.user_cooldown = command_opts.user_cooldown;
+			}
+
+			if (command_opts.chat_cooldown) {
+				command.chat_cooldown = command_opts.chat_cooldown;
+			}
+
+			if (command_opts.description) {
+				command.description = command_opts.description;
+			}
+
+			if (command_opts.response) {
+				command.response = command_opts.response;
+			}
+		}
+	}
+
 	public removeCommand(command_trigger: string) {
 		this.commands.delete(command_trigger);
 		this.command_cooldowns.delete(command_trigger);
