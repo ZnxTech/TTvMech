@@ -280,7 +280,7 @@ export namespace Helix {
 	// Ref: https://dev.twitch.tv/docs/api/reference/#get-eventsub-subscriptions
 	export async function getEventSubs<A extends Auth>(
 		auth: A,
-		data: {
+		data?: {
 			type?: string;
 			user_id?: string;
 			subscription_id?: string;
@@ -288,14 +288,21 @@ export namespace Helix {
 			after?: string;
 		}
 	): Promise<Z.infer<typeof APISchemas.GET_EVENTSUB>> {
-		const res = await fetch("https://api.twitch.tv/helix/eventsub/subscriptions", {
-			method: "POST",
+		const url = new URL("https://api.twitch.tv/helix/eventsub/subscriptions");
+
+		if (data) {
+			Object.entries(data).forEach(([key, val]) => {
+				url.searchParams.set(key, val);
+			});
+		}
+
+		const res = await fetch(url, {
+			method: "GET",
 			headers: {
 				"Authorization": `Bearer ${auth.token()}`,
 				"Client-Id": auth.clientId(),
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data),
 		});
 
 		if (!res.ok) {
