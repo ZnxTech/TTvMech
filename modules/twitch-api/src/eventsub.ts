@@ -45,13 +45,13 @@ export class EventSubWebSocket {
 	}
 
 	private onWelcome(ev: MessageEvent) {
-		const json = WebSocketSchemas.WELCOME.safeParse(ev.data);
+		const json = WebSocketSchemas.WELCOME.safeParse(JSON.parse(ev.data));
 
 		if (!json.success) {
 			return;
 		}
 
-		this.welcome_listener(ev.data);
+		this.welcome_listener(json.data);
 
 		// When reconnecting, close the old WebSocket only after
 		// the welcome message of the new WebSocket.
@@ -62,7 +62,7 @@ export class EventSubWebSocket {
 	}
 
 	private onKeepalive(ev: MessageEvent) {
-		const json = WebSocketSchemas.KEEPALIVE.safeParse(ev.data);
+		const json = WebSocketSchemas.KEEPALIVE.safeParse(JSON.parse(ev.data));
 
 		if (!json.success) {
 			return;
@@ -72,7 +72,7 @@ export class EventSubWebSocket {
 	}
 
 	private onNotification(ev: MessageEvent) {
-		const json = WebSocketSchemas.NOTIFICATION.safeParse(ev.data);
+		const json = WebSocketSchemas.NOTIFICATION.safeParse(JSON.parse(ev.data));
 
 		if (!json.success) {
 			return;
@@ -86,7 +86,7 @@ export class EventSubWebSocket {
 	}
 
 	private onReconnect(ev: MessageEvent) {
-		const json = WebSocketSchemas.RECONNECT.safeParse(ev.data);
+		const json = WebSocketSchemas.RECONNECT.safeParse(JSON.parse(ev.data));
 
 		if (!json.success) {
 			return;
@@ -101,7 +101,7 @@ export class EventSubWebSocket {
 	}
 
 	private onRevocation(ev: MessageEvent) {
-		const json = WebSocketSchemas.REVOCATION.safeParse(ev.data);
+		const json = WebSocketSchemas.REVOCATION.safeParse(JSON.parse(ev.data));
 
 		if (!json.success) {
 			return;
@@ -115,7 +115,7 @@ export class EventSubWebSocket {
 		this.ws = new WebSocket(url ?? new URL("wss://eventsub.wss.twitch.tv/ws"));
 
 		this.ws.addEventListener("message", (ev) => {
-			const generic = WebSocketSchemas.META.safeParse(ev.data);
+			const generic = WebSocketSchemas.META.safeParse(JSON.parse(ev.data));
 
 			if (generic.success) {
 				switch (generic.data.metadata.message_type) {
