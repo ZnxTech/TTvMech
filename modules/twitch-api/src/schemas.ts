@@ -229,7 +229,12 @@ export namespace WebSocketSchemas {
 				type: Z.string(),
 				version: Z.string(),
 				cost: Z.int(),
-				connected_at: Z.string(),
+				condition: Z.unknown(),
+				transport: Z.object({
+					method: Z.literal("websocket"),
+					session_id: Z.string(),
+				}),
+				created_at: Z.string(),
 			}),
 			event: Z.unknown(),
 		}),
@@ -267,7 +272,12 @@ export namespace WebSocketSchemas {
 				type: Z.string(),
 				version: Z.string(),
 				cost: Z.int(),
-				connected_at: Z.string(),
+				condition: Z.unknown(),
+				transport: Z.object({
+					method: Z.literal("websocket"),
+					session_id: Z.string(),
+				}),
+				created_at: Z.string(),
 			}),
 		}),
 	});
@@ -401,7 +411,7 @@ export namespace EventSubSchemas {
 				info: Z.string(),
 			})
 		),
-		is_source_only: Z.boolean().optional(),
+		is_source_only: Z.boolean().nullable(),
 	});
 
 	export const STREAM_ONLINE = Z.object({
