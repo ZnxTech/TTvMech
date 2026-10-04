@@ -63,7 +63,7 @@ export namespace HTMX.V1 {
 	});
 
 	ROUTER.route("*path").get((req, res) => {
-		const error = `Could not retrive endpoint "${req.params.path.join("/")}"`;
+		const error = `Could not retrive endpoint "/htmx/v1${req.params.path.join("/")}"`;
 		res.render("elements/error.ejs", { error: error });
 	});
 }
