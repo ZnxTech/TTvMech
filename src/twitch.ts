@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import { AppAuth, Helix } from "@ttvmech/twitch-api";
+import { AppAuth } from "@ttvmech/twitch-api";
 
 import { db } from "./db.js";
 import { tables } from "./db_schema.js";

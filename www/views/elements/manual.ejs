@@ -1,0 +1,13 @@
+<% for (const command of commands) { %>
+    <div class="flx box col g-1">
+        <div class="flx row g-1">
+            <div class="box tx-b mrg-auto-right"><%= cmd_prefix %><%= command.trigger %></div>
+            <div class="box tx-b">user cooldown: <%= command.user_cooldown/1000 %>s</div>
+            <div class="box tx-b">chat cooldown: <%= command.chat_cooldown/1000 %>s</div>
+            <div class="box tx-b">req score: <%= command.req_score %></div>
+        </div>
+        <% if (command.description) { %>
+            <p><%= command.description %></p>
+        <% } %> 
+    </div>
+<% } %>

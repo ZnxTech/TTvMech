@@ -1,4 +1,3 @@
-import CookieParser from "cookie-parser";
 import { eq } from "drizzle-orm";
 import Express from "express";
 import Qs from "qs";
@@ -10,8 +9,9 @@ import Auth from "./auth.js";
 import { TwitchBot } from "./bots.js";
 import { bot_manager } from "./bots_manager.js";
 import { Util as DBUtil, db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { table_twitch_bots, tables } from "./db_schema.js";
 import Meta from "./meta.js";
+import { Util as TwitchUtil } from "./twitch.js";
 
 export namespace API.V1 {
 	export const ROUTER = Express.Router();
@@ -196,6 +196,8 @@ export namespace API.V1 {
 			return res.status(400).send("Invalid request body.");
 		}
 
+		bot_manager.changeCommandPrefix(body.data.cmd_prefix);
+
 		DBUtil.settingsUpdate({
 			cmd_prefix: body.data.cmd_prefix,
 			root_path: body.data.root_path,
@@ -218,6 +220,252 @@ export namespace API.V1 {
 		DBUtil.settingsUpdateClient(body.data.client_id, body.data.client_secret);
 		res.sendStatus(200);
 	});
+
+	ROUTER.route("/commands").post(Auth.middleSessionAuth(true, false), (req, res) => {
+		const body = Z.object({
+			trigger: Z.string().trim().nonempty(),
+			chat_cooldown: Z.coerce.number().int().min(0),
+			user_cooldown: Z.coerce.number().int().min(0),
+			req_score: Z.coerce.number().int(),
+			response: Z.string().trim().nonempty(),
+			description: Z.string(),
+		}).safeParse(req.body);
+
+		if (!body.success) {
+			return res.status(400).send("Invalid request body.");
+		}
+
+		try {
+			const sql_res = db
+				.insert(tables.commands)
+				.values({
+					trigger: body.data.trigger,
+					active: true,
+					chat_cooldown: body.data.chat_cooldown,
+					user_cooldown: body.data.user_cooldown,
+					req_score: body.data.req_score,
+					response: body.data.response,
+					description: body.data.description,
+				})
+				.run();
+		} catch {
+			return res.status(400).send("A command with this trigger already exists.");
+		}
+
+		bot_manager.addCommand({ ...body.data, active: true });
+		res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+		res.sendStatus(200);
+	});
+
+	ROUTER.route("/commands/:command_trigger")
+		.put(Auth.middleSessionAuth(true, false), (req, res) => {
+			const body = Z.object({
+				chat_cooldown: Z.coerce.number().int().min(0),
+				user_cooldown: Z.coerce.number().int().min(0),
+				req_score: Z.coerce.number().int(),
+				response: Z.string().trim().nonempty(),
+				description: Z.string(),
+			}).safeParse(req.body);
+
+			if (!body.success) {
+				return res.status(400).send("Invalid request body.");
+			}
+
+			const trigger = req.params.command_trigger;
+			const sql_res = db.update(tables.commands).set(body.data).where(eq(tables.commands.trigger, trigger)).run();
+			bot_manager.editCommand(trigger, body.data);
+
+			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+			res.sendStatus(200);
+		})
+		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
+			const trigger = req.params.command_trigger;
+
+			const sql_res = db.delete(tables.commands).where(eq(tables.commands.trigger, trigger)).run();
+
+			bot_manager.removeCommand(trigger);
+			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+			res.sendStatus(200);
+		});
+
+	async function handleChannelPostTwitch(
+		channel_twitch_id: string,
+		bot_twitch_id: string | null,
+		offline_only: boolean
+	) {
+		const auth = await TwitchUtil.getAppAuth();
+		const users = await Helix.getUsers(auth, { ids: [channel_twitch_id] });
+		const [channel_user] = users.data;
+
+		if (!channel_user) {
+			throw new Error("Could not obtain channel Twitch user.");
+		}
+
+		const sql_res = db
+			.insert(tables.twitch_channels)
+			.values({
+				twitch_id: channel_twitch_id,
+				twitch_uname: channel_user.login,
+				twitch_dname: channel_user.display_name,
+				active: true,
+				offline_only: offline_only,
+				bot_twitch_id: bot_twitch_id,
+			})
+			.run();
+
+		if (bot_twitch_id) {
+			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+		}
+	}
+
+	ROUTER.route("/channels").post(Auth.middleSessionAuth(true, false), (req, res) => {
+		const body = Z.object({
+			origin: Z.enum(["twitch", "youtube", "kick"]),
+			channel_origin_id: Z.string().trim().nonempty(),
+			bot_origin_id: Z.string().trim().nonempty(),
+			offline_only: Z.literal("on").optional(),
+		}).safeParse(req.body);
+
+		if (!body.success) {
+			return res.status(400).send("Invalid request body.");
+		}
+
+		const offline_only = body.data.offline_only === "on";
+		const bot_origin_id = body.data.bot_origin_id === "none" ? null : body.data.bot_origin_id;
+
+		try {
+			switch (body.data.origin) {
+				case "twitch":
+					handleChannelPostTwitch(body.data.channel_origin_id, bot_origin_id, offline_only);
+					break;
+
+				case "youtube":
+					break;
+
+				case "kick":
+					break;
+			}
+		} catch {
+			return res.status(500).send("Could not create channel.");
+		}
+
+		res.appendHeader("HX-Trigger", "ttv:reloadChannels");
+		res.sendStatus(200);
+	});
+
+	function handleChannelPutTwitch(channel_twitch_id: string, bot_twitch_id: string | null, offline_only: boolean) {
+		const channel = db
+			.select({
+				twitch_id: tables.twitch_channels.twitch_id,
+				bot_twitch_id: tables.twitch_channels.bot_twitch_id,
+			})
+			.from(tables.twitch_channels)
+			.where(eq(tables.twitch_channels.twitch_id, channel_twitch_id))
+			.get();
+
+		const _ = db
+			.update(tables.twitch_channels)
+			.set({
+				bot_twitch_id: bot_twitch_id,
+				offline_only: offline_only,
+			})
+			.where(eq(tables.twitch_channels.twitch_id, channel_twitch_id))
+			.run();
+
+		if (!channel) {
+			return;
+		} else if (channel.bot_twitch_id && bot_twitch_id) {
+			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+		} else if (channel.bot_twitch_id && !bot_twitch_id) {
+			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+		} else if (!channel.bot_twitch_id && bot_twitch_id) {
+			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+		}
+	}
+
+	function handleChannelDeleteTwitch(channel_twitch_id: string) {
+		const channel = db
+			.select({
+				twitch_id: tables.twitch_channels.twitch_id,
+				bot_twitch_id: tables.twitch_channels.bot_twitch_id,
+			})
+			.from(tables.twitch_channels)
+			.where(eq(tables.twitch_channels.twitch_id, channel_twitch_id))
+			.get();
+
+		const _ = db
+			.delete(tables.twitch_channels)
+			.where(eq(tables.twitch_channels.twitch_id, channel_twitch_id))
+			.run();
+
+		if (channel && channel.bot_twitch_id) {
+			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+		}
+	}
+
+	ROUTER.route("/channels/:channel_origin_id")
+		.put(Auth.middleSessionAuth(true, false), (req, res) => {
+			const body = Z.object({
+				bot_origin_id: Z.string().trim().nonempty(),
+				offline_only: Z.literal("on").optional(),
+			}).safeParse(req.body);
+
+			if (!body.success) {
+				return res.status(400).send("Invalid request body.");
+			}
+
+			const [channel_origin, channel_origin_id] = req.params.channel_origin_id.split(":");
+			const bot_origin_id = body.data.bot_origin_id === "none" ? null : body.data.bot_origin_id;
+			const offline_only = body.data.offline_only === "on";
+
+			if (!channel_origin || !channel_origin_id) {
+				return res.status(400).send("Invalid request body.");
+			}
+
+			try {
+				switch (channel_origin) {
+					case "twitch":
+						handleChannelPutTwitch(channel_origin_id, bot_origin_id, offline_only);
+						break;
+
+					case "youtube":
+						break;
+
+					case "kick":
+						break;
+				}
+			} catch {
+				return res.status(500).send("Could not edit channel.");
+			}
+
+			res.sendStatus(200);
+		})
+		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
+			const [channel_origin, channel_origin_id] = req.params.channel_origin_id.split(":");
+
+			if (!channel_origin || !channel_origin_id) {
+				return res.status(400).send("Invalid request body.");
+			}
+
+			try {
+				switch (channel_origin) {
+					case "twitch":
+						handleChannelDeleteTwitch(channel_origin_id);
+						break;
+
+					case "youtube":
+						break;
+
+					case "kick":
+						break;
+				}
+			} catch {
+				return res.status(500).send("Could not delete channel.");
+			}
+
+			res.sendStatus(200);
+		});
 
 	ROUTER.route("/bots/twitch").get(Auth.middleSessionAuth(true, false), (req, res) => {
 		const twitch_bots = db

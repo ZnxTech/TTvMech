@@ -1,0 +1,60 @@
+<form class="cnt"
+    hx-post="/api/v1/channels"
+    hx-swap="none">
+    <section class="flx box col g-1">
+        <h3 class="s-center">Add Channel:</h3>
+        <div class="flx row g-1 x-end">
+            <div class="flx col flx-1">
+                <label for="input_channel">Channel ID:</label>
+                <input id="input_channel" type="text" name="channel_origin_id" required>
+            </div>
+            <div class="flx col flx-1">
+                <label for="input_bot">Assigned Bot:</label>
+                <!-- initial page load bots -->
+                <select id="input_bot" name="bot_origin_id"
+                    hx-get="/htmx/v1/channels/bots/twitch"
+                    hx-trigger="load"
+                    hx-target="#input_bot"
+                    hx-swap="innerHTML">
+                    <option value="none">none</option>
+                </select>
+            </div>
+        </div>
+        <div class="flx row g-1">
+            <label class="bg-twitch rad-btn tx-b" for="input_twitch">
+                <input id="input_twitch" class="rad-chk" type="radio" name="origin" value="twitch" required checked
+                    hx-get="/htmx/v1/channels/bots/twitch"
+                    hx-trigger="click"
+                    hx-target="#input_bot"
+                    hx-swap="innerHTML">
+                Twitch
+            </label>
+            <label class="bg-youtube rad-btn tx-b" for="input_youtube">
+                <input id="input_youtube" class="rad-chk" type="radio" name="origin" value="youtube" required
+                    hx-get="/htmx/v1/channels/bots/youtube"
+                    hx-trigger="click"
+                    hx-target="#input_bot"
+                    hx-swap="innerHTML">
+                Youtube
+            </label>
+            <label class="bg-kick rad-btn tx-b" for="input_kick">
+                <input id="input_kick" class="rad-chk" type="radio" name="origin" value="kick" required
+                    hx-get="/htmx/v1/channels/bots/kick"
+                    hx-trigger="click"
+                    hx-target="#input_bot"
+                    hx-swap="innerHTML">
+                Kick
+            </label>
+            <label class="rad-btn tx-b mrg-auto-left" for="input_offline_only">
+                <input id="input_offline_only" class="rad-chk" type="checkbox" name="offline_only">
+                Offline Only
+            </label>
+        </div>
+    </section>
+    <button class="btn tx-b" type="submit">Submit</button>
+</form>
+<form class="cnt"
+    hx-get="/htmx/v1/channels"
+    hx-trigger="load, ttv:reloadChannels from:body"
+    hx-swap="innerHTML">
+</form>

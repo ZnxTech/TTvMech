@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import Z from "zod";
 
 import { ChannelEvent, MessageEvent, PluginBot } from "@ttvmech/plugin-api";
 import { EventSub, Helix, BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
@@ -8,6 +7,7 @@ import { EventSubSchemas } from "@ttvmech/twitch-api/schemas";
 
 import { db } from "./db.js";
 import { tables } from "./db_schema.js";
+import { Logger } from "./log.js";
 
 const GLOBAL_MESSAGES_PER_30S = 20;
 const GLOBAL_MESSAGES_PER_30S_MODDED = 100;
@@ -189,42 +189,51 @@ export class TwitchBot {
 	}
 
 	private async getEventSubSession(): Promise<EventSubWebSocketSession> {
+		Logger.info(`attempting to get an EventSub session.`);
 		if (!this.eventsub_ws_session) {
-			const auth = await this.getAuth();
+			Logger.info(`no EventSub active, creating new EventSub connection.`);
 
-			this.eventsub_ws_session = new Promise((res, rej) => {
-				this.eventsub_ws.setWelcomeListener(async (ev) => {
-					const eventsubs = await Helix.getEventSubs(auth, {});
-					const session: EventSubWebSocketSession = {
-						id: ev.payload.session.id,
-						total: eventsubs.total,
-						total_cost: eventsubs.total_cost,
-						total_max_cost: eventsubs.max_total_cost,
-					};
+			const { promise, resolve, reject } = Promise.withResolvers<EventSubWebSocketSession>();
 
-					this.eventsub_ws.setWelcomeListener((ev) => {
-						session.id = ev.payload.session.id;
-					});
+			this.eventsub_ws_session = promise;
 
-					this.eventsub_ws.setCloseListener((ev) => {
-						this.eventsub_ws_session = null;
-					});
+			this.eventsub_ws.setWelcomeListener(async (ev) => {
+				Logger.info(`recived EventSub welcome event.`);
+				const auth = await this.getAuth();
+				const eventsubs = await Helix.getEventSubs(auth);
+				const session: EventSubWebSocketSession = {
+					id: ev.payload.session.id,
+					total: eventsubs.total,
+					total_cost: eventsubs.total_cost,
+					total_max_cost: eventsubs.max_total_cost,
+				};
 
-					res(session);
+				this.eventsub_ws.setWelcomeListener((ev) => {
+					session.id = ev.payload.session.id;
 				});
 
 				this.eventsub_ws.setCloseListener((ev) => {
-					rej();
+					this.eventsub_ws_session = null;
 				});
+
+				Logger.info(`EventSub connection successful, resolving promise.`);
+				resolve(session);
+			});
+
+			this.eventsub_ws.setCloseListener((ev) => {
+				Logger.error(`EventSub connection failed, rejecting promise.`);
+				reject();
 			});
 
 			this.eventsub_ws.connect();
 		}
 
 		try {
+			Logger.info(`awaiting EventSub promise.`);
 			const session = await this.eventsub_ws_session;
 			return session;
 		} catch {
+			Logger.info(`failed to await EventSub promise.`);
 			this.eventsub_ws_session = null;
 			throw new Error("Could not establish EventSub websocket");
 		}
@@ -411,6 +420,7 @@ export class TwitchBot {
 	}
 
 	public async join(channel_id: string): Promise<boolean> {
+		Logger.info(`Joining Twitch bot "${this.twitch_dname}".`);
 		if (this.joins.get(channel_id)) {
 			// Already joined, no need to duplicate EventSub subs
 			return false;
@@ -447,6 +457,7 @@ export class TwitchBot {
 	}
 
 	public async part(channel_id: string): Promise<boolean> {
+		Logger.info(`Parting Twitch bot "${this.twitch_dname}".`);
 		const join = this.joins.get(channel_id);
 		if (!join) {
 			// Not joined, skip and return false.

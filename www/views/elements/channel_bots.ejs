@@ -1,0 +1,6 @@
+<option value="none">none</option>
+<% for (const bot of bots) { %>
+    <option value="<%= bot.id %>" <%= (selected && selected === bot.id) ? "selected" : "" %>>
+        <%= bot.dname %>
+    </option>
+<% } %>

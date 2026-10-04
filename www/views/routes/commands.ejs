@@ -1,0 +1,39 @@
+<form class="cnt"
+    hx-post="/api/v1/commands"
+    hx-swap="none">
+    <section class="flx box col g-1">
+        <h3 class="s-center">Create Command:</h3>
+        <div class="flx row g-1 x-end">
+            <div class="flx col flx-2">
+                <label for="input_trigger">Trigger:</label>
+                <input id="input_trigger" type="text" name="trigger" placeholder="hey" required>
+            </div>
+            <div class="flx col flx-1">
+                <label for="input_chat_cooldown">Chat Cooldown:</label>
+                <input id="input_chat_cooldown" type="number" name="chat_cooldown" value="0" required>
+            </div>
+            <div class="flx col flx-1">
+                <label for="input_user_cooldown">User Cooldown:</label>
+                <input id="input_user_cooldown" type="number" name="user_cooldown" value="0" required>
+            </div>
+            <div class="flx col flx-1">
+                <label for="input_score">Required Score:</label>
+                <input id="input_score" type="number" name="req_score" value="0" required>
+            </div>
+        </div>
+        <div class="flx col">
+            <label for="input_response">Response:</label>
+            <input id="input_response" type="text" name="response" placeholder="Hey @{user.dname}!" required>
+        </div>
+        <div class="flx col">
+            <label for="input_description">Description:</label>
+            <textarea id="input_description" name="description" rows="6" placeholder="replies to the user with a hey!"></textarea>
+        </div>
+    </section>
+    <button class="btn tx-b" type="submit">Submit</button>
+</form>
+<div class="cnt"
+    hx-get="/htmx/v1/commands"
+    hx-trigger="load, ttv:reloadCommands from:body"
+    hx-swap="innerHTML">
+</div>

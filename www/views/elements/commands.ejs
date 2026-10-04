@@ -1,0 +1,42 @@
+<% for (const command of commands) { %>
+    <div id="command-<%= command.trigger %>" class="cnt">
+        <div class="flx box row m-start g-1">
+            <div class="box tx-b"><%= command.trigger %></div>
+            <input id="command-<%= command.trigger %>-clp" class="clp-chk" type="checkbox">
+            <label for="command-<%= command.trigger %>-clp" class="btn mrg-auto-left tx-b">Edit</label>
+            <div class="bg-red btn tx-b"
+                hx-delete="/api/v1/commands/<%= command.trigger %>"
+                hx-target="#command-<%= command.trigger %>"
+                hx-swap="delete">
+                Delete
+            </div>
+        </div>
+        <form class="clp flx box col g-1"
+            hx-put="/api/v1/commands/<%= command.trigger %>"
+            hx-swap="none">
+            <div class="flx row g-1 x-end">
+                <div class="flx col flx-1">
+                    <label for="command-<%= command.trigger %>-input_chat_cooldown">Chat Cooldown:</label>
+                    <input id="command-<%= command.trigger %>-input_chat_cooldown" type="number" name="chat_cooldown" value="<%= command.user_cooldown %>" required>
+                </div>
+                <div class="flx col flx-1">
+                    <label for="command-<%= command.trigger %>-input_user_cooldown">User Cooldown:</label>
+                    <input id="command-<%= command.trigger %>-input_user_cooldown" type="number" name="user_cooldown" value="<%= command.user_cooldown %>" required>
+                </div>
+                <div class="flx col flx-1">
+                    <label for="command-<%= command.trigger %>-input_score">Required Score:</label>
+                    <input id="command-<%= command.trigger %>-input_score" type="number" name="req_score" value="<%= command.req_score %>" required>
+                </div>
+            </div>
+            <div class="flx col">
+                <label for="command-<%= command.trigger %>-input_response">Response:</label>
+                <input id="command-<%= command.trigger %>-input_response" type="text" name="response" value="<%= command.response %>" required>
+            </div>
+            <div class="flx col">
+                <label for="command-<%= command.trigger %>-input_description">Description:</label>
+                <textarea id="command-<%= command.trigger %>-input_description" name="description" rows="6"><%= command.description %></textarea>
+            </div>
+            <button class="btn tx-b" type="submit">Update Command</button>
+        </form>
+    </div>
+<% } %>

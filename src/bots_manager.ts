@@ -2,7 +2,6 @@ import NodeFS from "node:fs";
 import NodePath from "node:path";
 
 import { eq, inArray } from "drizzle-orm";
-import Z from "zod";
 
 import { ChannelEvent, MessageEvent, Plugin, PluginBot, PluginState } from "@ttvmech/plugin-api";
 import { PLUGIN_SCHEMA } from "@ttvmech/plugin-api/schemas";
@@ -11,6 +10,7 @@ import { BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
 import { TwitchBot } from "./bots.js";
 import { db } from "./db.js";
 import { tables } from "./db_schema.js";
+import { Logger } from "./log.js";
 import Meta from "./meta.js";
 
 interface Command {
@@ -35,6 +35,9 @@ export class BotManager {
 	private command_prefix: string;
 	private command_cooldowns: Map<string, CommandCooldown>;
 
+	private offline_only: Map<string, boolean>;
+	private is_online: Map<string, boolean>;
+
 	private twitch_bots: Map<string, TwitchBot>;
 	// private youtube_bots:
 	// private kick_bots:
@@ -45,6 +48,9 @@ export class BotManager {
 		this.commands = new Map();
 		this.command_prefix = "!";
 		this.command_cooldowns = new Map();
+
+		this.offline_only = new Map();
+		this.is_online = new Map();
 
 		this.twitch_bots = new Map();
 	}
@@ -183,13 +189,19 @@ export class BotManager {
 				return;
 			}
 
+			const user_id = `${ev.origin}:${ev.chatter_id}`;
+			const chat_id = `${ev.origin}:${ev.channel_id}`;
+
+			// Check if channel is live if offline only is enabled.
+
+			if (this.offline_only.get(chat_id) && (this.is_online.get(chat_id) ?? true)) {
+				return;
+			}
+
 			// Check if cooldowns expired.
 
-			const user_cooldown_id = `${ev.origin}:${ev.chatter_id}`;
-			const chat_cooldown_id = `${ev.origin}:${ev.channel_id}`;
-
-			const user_cooldown = cooldowns.user_cooldowns.get(user_cooldown_id);
-			const chat_cooldown = cooldowns.chat_cooldowns.get(chat_cooldown_id);
+			const user_cooldown = cooldowns.user_cooldowns.get(user_id);
+			const chat_cooldown = cooldowns.chat_cooldowns.get(chat_id);
 
 			if (user_cooldown && user_cooldown.getTime() > Date.now()) {
 				return;
@@ -213,12 +225,12 @@ export class BotManager {
 
 			if (command.user_cooldown > 0) {
 				const cooldown = new Date(Date.now() + command.user_cooldown);
-				cooldowns.user_cooldowns.set(user_cooldown_id, cooldown);
+				cooldowns.user_cooldowns.set(user_id, cooldown);
 			}
 
 			if (command.chat_cooldown > 0) {
 				const cooldown = new Date(Date.now() + command.chat_cooldown);
-				cooldowns.chat_cooldowns.set(chat_cooldown_id, cooldown);
+				cooldowns.chat_cooldowns.set(chat_id, cooldown);
 			}
 		}
 	}
@@ -232,6 +244,17 @@ export class BotManager {
 		});
 
 		this.processCommand(plugin_bot, ev);
+	}
+
+	private onBotStream(plugin_bot: PluginBot, ev: ChannelEvent) {
+		this.plugins.forEach((plugin) => {
+			if (plugin.onStream) {
+				const plugin_state = BotManager.getPluginState();
+				plugin.onStream(plugin_state, plugin_bot, ev);
+			}
+		});
+
+		this.is_online.set(`${ev.origin}:${ev.channel_id}`, ev.status === "live");
 	}
 
 	private onBotJoin(plugin_bot: PluginBot, ev: ChannelEvent) {
@@ -262,6 +285,11 @@ export class BotManager {
 		this.onBotMessage(plugin_bot, ev);
 	}
 
+	private onTwitchBotStream(twitch_bot: TwitchBot, ev: ChannelEvent) {
+		const plugin_bot = twitch_bot.getPluginBot();
+		this.onBotStream(plugin_bot, ev);
+	}
+
 	private onTwitchBotJoin(twitch_bot: TwitchBot, ev: ChannelEvent) {
 		const plugin_bot = twitch_bot.getPluginBot();
 		this.onBotJoin(plugin_bot, ev);
@@ -276,10 +304,27 @@ export class BotManager {
 		const twitch_id = twitch_bot.getTwitchId();
 
 		this.twitch_bots.set(twitch_id, twitch_bot);
-		twitch_bot.setFaultListener(this.onTwitchBotFault);
-		twitch_bot.setMessageListener(this.onTwitchBotMessage);
-		twitch_bot.setJoinListener(this.onTwitchBotJoin);
-		twitch_bot.setPartListener(this.onTwitchBotPart);
+		twitch_bot.setFaultListener(this.onTwitchBotFault.bind(this));
+		twitch_bot.setMessageListener(this.onTwitchBotMessage.bind(this));
+		twitch_bot.setStreamListener(this.onTwitchBotStream.bind(this));
+		twitch_bot.setJoinListener(this.onTwitchBotJoin.bind(this));
+		twitch_bot.setPartListener(this.onTwitchBotPart.bind(this));
+	}
+
+	public joinTwitchBot(twitch_id: string, channel_twitch_id: string) {
+		const twitch_bot = this.twitch_bots.get(twitch_id);
+
+		if (twitch_bot) {
+			twitch_bot.join(channel_twitch_id);
+		}
+	}
+
+	public partTwitchBot(twitch_id: string, channel_twitch_id: string) {
+		const twitch_bot = this.twitch_bots.get(twitch_id);
+
+		if (twitch_bot) {
+			twitch_bot.part(channel_twitch_id);
+		}
 	}
 
 	public removeTwitchBot(twitch_id: string) {
@@ -333,7 +378,14 @@ export class BotManager {
 		this.command_cooldowns.delete(command_trigger);
 	}
 
+	public changeCommandPrefix(command_prefix: string) {
+		this.command_prefix = command_prefix;
+	}
+
 	public async init(): Promise<BotManager> {
+		Logger.info("Starting bots_manager initializing.");
+
+		Logger.info("- Initializing plugins.");
 		this.plugins = await BotManager.loadPlugins();
 		this.plugins.forEach((plugin) => {
 			if (plugin.onLoad) {
@@ -342,6 +394,7 @@ export class BotManager {
 			}
 		});
 
+		Logger.info("- Initializing commands.");
 		const commands = BotManager.loadCommands();
 		commands.forEach((command) => {
 			if (!this.commands.has(command.trigger)) {
@@ -355,16 +408,37 @@ export class BotManager {
 
 		this.command_prefix = BotManager.loadCommandPrefix();
 
+		Logger.info("- Initializing Twitch bots.");
 		const twitch_bots = BotManager.loadTwitchBots();
 		twitch_bots.forEach((twitch_bot) => {
 			const twitch_id = twitch_bot.getTwitchId();
 
+			const channels = db
+				.select({
+					twitch_id: tables.twitch_channels.twitch_id,
+					active: tables.twitch_channels.active,
+					offline_only: tables.twitch_channels.offline_only,
+				})
+				.from(tables.twitch_channels)
+				.where(eq(tables.twitch_channels.bot_twitch_id, twitch_id))
+				.all();
+
+			channels.forEach((channel) => {
+				const channel_offline_id = `twitch:${channel.twitch_id}`;
+				this.offline_only.set(channel_offline_id, channel.offline_only);
+
+				if (channel.active) {
+					twitch_bot.join(channel.twitch_id);
+				}
+			});
+
 			if (!this.twitch_bots.has(twitch_id)) {
 				this.twitch_bots.set(twitch_id, twitch_bot);
-				twitch_bot.setFaultListener(this.onTwitchBotFault);
-				twitch_bot.setMessageListener(this.onTwitchBotMessage);
-				twitch_bot.setJoinListener(this.onTwitchBotJoin);
-				twitch_bot.setPartListener(this.onTwitchBotPart);
+				twitch_bot.setFaultListener(this.onTwitchBotFault.bind(this));
+				twitch_bot.setMessageListener(this.onTwitchBotMessage.bind(this));
+				twitch_bot.setStreamListener(this.onTwitchBotStream.bind(this));
+				twitch_bot.setJoinListener(this.onTwitchBotJoin.bind(this));
+				twitch_bot.setPartListener(this.onTwitchBotPart.bind(this));
 			}
 		});
 

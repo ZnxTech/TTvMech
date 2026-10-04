@@ -1,0 +1,14 @@
+<% for (const channel of channels) { %>
+    <div id="channel-twitch-<%= channel.id %>">
+        <div class="flx box row g-1">
+            <div class="box tx-b bg-twitch">Twitch</div>
+            <div class="box tx-b mrg-auto-right"><%= channel.dname %></div>
+            <div class="box btn tx-b bg-red"
+                hx-delete="/api/v1/channels/twitch:<%= channel.id %>"
+                hx-target="#channel-twitch-<%= channel.id %>"
+                hx-swap="delete">
+                Delete
+            </div>
+        </div>
+    </div>
+<% } %>

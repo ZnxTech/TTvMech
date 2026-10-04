@@ -4,9 +4,9 @@ import Qs from "qs";
 
 import API from "./api.js";
 import Auth from "./auth.js";
-import { Util as DBUtil, db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { Util as DBUtil } from "./db.js";
 import HTMX from "./htmx.js";
+import { Logger } from "./log.js";
 import Meta from "./meta.js";
 
 export const app = Express();
@@ -93,6 +93,20 @@ app.use(middleInitRedirect(true, "/init"))
 	});
 
 app.use(middleInitRedirect(true, "/init"), middleAuthRedirect(true, false, "/dashboard"))
+	.get("/commands", (req, res) => {
+		res.render("base.ejs", {
+			meta: ejs_meta,
+			view: "routes/commands.ejs",
+			session: res.locals.session,
+		});
+	})
+	.get("/channels", (req, res) => {
+		res.render("base.ejs", {
+			meta: ejs_meta,
+			view: "routes/channels.ejs",
+			session: res.locals.session,
+		});
+	})
 	.get("/bots", (req, res) => {
 		res.render("base.ejs", {
 			meta: ejs_meta,
@@ -121,3 +135,4 @@ app.get("*path", middleInitRedirect(true, "/init"), (req, res) => {
 });
 
 app.listen(Meta.META_PORT);
+Logger.info("TTvMech started.");
