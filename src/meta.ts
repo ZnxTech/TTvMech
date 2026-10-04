@@ -5,7 +5,7 @@ export namespace Meta {
 	export const META_VERSION_MAJOR = 2;
 	export const META_VERSION_MINOR = 0;
 	export const META_VERSION_PATCH = 0;
-	export const META_VERSION_TAG = "indev";
+	export const META_VERSION_TAG = "beta-1";
 	export const META_VERSION = `${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}-${META_VERSION_TAG}`;
 
 	export const META_PORT = process.env.PORT ?? 31314;

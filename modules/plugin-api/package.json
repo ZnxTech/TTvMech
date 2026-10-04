@@ -1,6 +1,6 @@
 {
 	"name": "@ttvmech/plugin-api",
-	"version": "2.0.0-indev",
+	"version": "2.0.0-beta-1",
 	"type": "module",
 	"private": true,
 	"exports": {
