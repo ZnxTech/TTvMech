@@ -386,7 +386,6 @@ export namespace Helix {
 		if (json.success) {
 			return json.data;
 		} else {
-			console.log(json.error.message, body);
 			throw new Error("Invalid users json recived");
 		}
 	}
