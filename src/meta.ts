@@ -12,6 +12,7 @@ export namespace Meta {
 	export const META_PLUGINS_PATH = process.env.PLUGINS_PATH ?? "plugins";
 	export const META_DB_PATH = process.env.DB_PATH ?? "data/db.sqlite";
 	export const META_DB_BACKUP_PATH = process.env.DB_BACKUP_PATH ?? null;
+	export const META_LOG_PATH = process.env.LOG_PATH ?? "data/logs";
 }
 
 export default Meta;
