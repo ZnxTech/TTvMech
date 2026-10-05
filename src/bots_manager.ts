@@ -13,6 +13,7 @@ import { tables } from "./db_schema.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";
 import { Util as TwitchUtil } from "./twitch.js";
+import { pathToFileURL } from "node:url";
 
 interface Command {
 	trigger: string;
@@ -109,7 +110,10 @@ export class BotManager {
 
 		const imports = files
 			.filter((file) => file.isFile() && file.name.endsWith(".plugin.js"))
-			.map((file) => import(NodePath.join("..", file.parentPath, file.name)));
+			.map((file) => {
+				const absolute_path = NodePath.resolve(process.cwd(), file.parentPath, file.name);
+				return import(pathToFileURL(absolute_path).href);
+			});
 
 		const parses = (await Promise.allSettled(imports))
 			.filter((result) => result.status === "fulfilled")
