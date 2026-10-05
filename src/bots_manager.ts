@@ -12,6 +12,7 @@ import { db } from "./db.js";
 import { tables } from "./db_schema.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";
+import { Util as TwitchUtil } from "./twitch.js";
 
 interface Command {
 	trigger: string;
@@ -58,7 +59,8 @@ export class BotManager {
 	private static getPluginState(): PluginState {
 		return {
 			getTwitchAppAuth: async () => {
-				throw new Error("Twitch app auth unavilable");
+				const auth = await TwitchUtil.getAppAuth();
+				return auth.token();
 			},
 			getYoutubeAppAuth: async () => {
 				throw new Error("Youtube app auth unavilable");
