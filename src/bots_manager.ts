@@ -109,11 +109,15 @@ export class BotManager {
 
 		const imports = files
 			.filter((file) => file.isFile() && file.name.endsWith(".plugin.js"))
-			.map((file) => import(NodePath.join(file.parentPath, file.name)));
+			.map((file) => import(NodePath.join("..", file.parentPath, file.name)));
 
-		return (await Promise.allSettled(imports))
+		const parses = (await Promise.allSettled(imports))
 			.filter((result) => result.status === "fulfilled")
-			.map((value) => PLUGIN_SCHEMA.safeParse(value))
+			.map((result) => PLUGIN_SCHEMA.safeParseAsync(result.value.default));
+
+		return (await Promise.allSettled(parses))
+			.filter((result) => result.status === "fulfilled")
+			.map((result) => result.value)
 			.filter((result) => result.success)
 			.map((result) => result.data);
 	}
@@ -390,6 +394,7 @@ export class BotManager {
 		Logger.info("- Initializing plugins.");
 		this.plugins = await BotManager.loadPlugins();
 		this.plugins.forEach((plugin) => {
+			Logger.info(`- Loaded plugin ${plugin.name}.`);
 			if (plugin.onLoad) {
 				const plugin_state = BotManager.getPluginState();
 				plugin.onLoad(plugin_state);
