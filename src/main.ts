@@ -135,4 +135,3 @@ app.get("*path", middleInitRedirect(true, "/init"), (req, res) => {
 });
 
 app.listen(Meta.META_PORT);
-Logger.info("TTvMech started.");

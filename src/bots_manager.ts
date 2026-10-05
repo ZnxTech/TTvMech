@@ -385,7 +385,7 @@ export class BotManager {
 	}
 
 	public async init(): Promise<BotManager> {
-		Logger.info("Starting bots_manager initializing.");
+		Logger.info("Start bots_manager initializing.");
 
 		Logger.info("- Initializing plugins.");
 		this.plugins = await BotManager.loadPlugins();

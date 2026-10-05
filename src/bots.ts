@@ -189,16 +189,14 @@ export class TwitchBot {
 	}
 
 	private async getEventSubSession(): Promise<EventSubWebSocketSession> {
-		Logger.info(`attempting to get an EventSub session.`);
 		if (!this.eventsub_ws_session) {
-			Logger.info(`no EventSub active, creating new EventSub connection.`);
+			Logger.info(`- No EventSub active, attempting new EventSub connection.`);
 
 			const { promise, resolve, reject } = Promise.withResolvers<EventSubWebSocketSession>();
 
 			this.eventsub_ws_session = promise;
 
 			this.eventsub_ws.setWelcomeListener(async (ev) => {
-				Logger.info(`recived EventSub welcome event.`);
 				const auth = await this.getAuth();
 				const eventsubs = await Helix.getEventSubs(auth);
 				const session: EventSubWebSocketSession = {
@@ -216,12 +214,12 @@ export class TwitchBot {
 					this.eventsub_ws_session = null;
 				});
 
-				Logger.info(`EventSub connection successful, resolving promise.`);
+				Logger.info(`- EventSub connection successful, resolving promise.`);
 				resolve(session);
 			});
 
 			this.eventsub_ws.setCloseListener((ev) => {
-				Logger.error(`EventSub connection failed, rejecting promise.`);
+				Logger.warn(`- EventSub connection failed, rejecting promise.`);
 				reject();
 			});
 
@@ -229,11 +227,9 @@ export class TwitchBot {
 		}
 
 		try {
-			Logger.info(`awaiting EventSub promise.`);
 			const session = await this.eventsub_ws_session;
 			return session;
 		} catch {
-			Logger.info(`failed to await EventSub promise.`);
 			this.eventsub_ws_session = null;
 			throw new Error("Could not establish EventSub websocket");
 		}
@@ -420,7 +416,7 @@ export class TwitchBot {
 	}
 
 	public async join(channel_id: string): Promise<boolean> {
-		Logger.info(`Joining Twitch bot "${this.twitch_dname}".`);
+		Logger.info(`Joining Twitch bot "${this.twitch_dname}" to channel id "${channel_id}".`);
 		if (this.joins.get(channel_id)) {
 			// Already joined, no need to duplicate EventSub subs
 			return false;
@@ -434,6 +430,7 @@ export class TwitchBot {
 		} catch {
 			this.setFaulty();
 			this.fault_listener(this);
+			Logger.warn(`- Twitch bot "${this.twitch_dname}" failed join, faulty.`);
 			return false;
 		}
 
@@ -450,6 +447,7 @@ export class TwitchBot {
 				channel_dname: join.twitch_dname,
 			});
 
+			Logger.info(`- Twitch bot "${this.twitch_dname}" joined successfully.`);
 			return true;
 		} catch {
 			return false;
@@ -457,7 +455,7 @@ export class TwitchBot {
 	}
 
 	public async part(channel_id: string): Promise<boolean> {
-		Logger.info(`Parting Twitch bot "${this.twitch_dname}".`);
+		Logger.info(`Parting Twitch bot "${this.twitch_dname}" from channel id "${channel_id}".`);
 		const join = this.joins.get(channel_id);
 		if (!join) {
 			// Not joined, skip and return false.
@@ -472,6 +470,7 @@ export class TwitchBot {
 		} catch {
 			this.setFaulty();
 			this.fault_listener(this);
+			Logger.warn(`- Twitch bot "${this.twitch_dname}" failed part, faulty.`);
 			return false;
 		}
 
@@ -491,6 +490,7 @@ export class TwitchBot {
 				this.eventsub_ws.close();
 			}
 
+			Logger.info(`- Twitch bot "${this.twitch_dname}" parted successfully.`);
 			return true;
 		} catch {
 			return false;
