@@ -53,6 +53,6 @@ export namespace Logger {
 	}
 
 	export function error(message: string) {
-		log("INFO", ANSI_COLORS.RED, message);
+		log("ERR!", ANSI_COLORS.RED, message);
 	}
 }
