@@ -69,38 +69,11 @@ export const PLUGIN_SCHEMA = Z.object({
 	name: Z.string(),
 	version: Z.string(),
 
-	onLoad: Z.function({
-		input: [PLUGIN_STATE_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onEnable: Z.function({
-		input: [PLUGIN_STATE_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onDisable: Z.function({
-		input: [PLUGIN_STATE_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onMessage: Z.function({
-		input: [PLUGIN_STATE_SCHEMA, PLUGIN_BOT_SCHEMA, MESSAGE_EVENT_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onStream: Z.function({
-		input: [PLUGIN_STATE_SCHEMA, PLUGIN_BOT_SCHEMA, CHANNEL_EVENT_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onJoin: Z.function({
-		input: [PLUGIN_STATE_SCHEMA, PLUGIN_BOT_SCHEMA, CHANNEL_EVENT_SCHEMA],
-		output: Z.void(),
-	}).optional(),
-
-	onPart: Z.function({
-		input: [PLUGIN_STATE_SCHEMA, PLUGIN_BOT_SCHEMA, CHANNEL_EVENT_SCHEMA],
-		output: Z.void(),
-	}).optional(),
+	onLoad: Z.function().optional(),
+	onEnable: Z.function().optional(),
+	onDisable: Z.function().optional(),
+	onMessage: Z.function().optional(),
+	onStream: Z.function().optional(),
+	onJoin: Z.function().optional(),
+	onPart: Z.function().optional(),
 });
