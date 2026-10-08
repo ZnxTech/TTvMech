@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# unneeded
+LICENCE
+.prettier*
+.gitignore
+plugins
+
+# output
+data
+dist
+*.tsbuildinfo
+
+# env files
+.env*
+
+# IDEs
+.vscode
+.idea
