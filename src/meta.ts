@@ -8,11 +8,11 @@ export namespace Meta {
 	export const META_VERSION_TAG = "beta-1";
 	export const META_VERSION = `${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}-${META_VERSION_TAG}`;
 
-	export const META_PORT = process.env.PORT ?? 31314;
-	export const META_PLUGINS_PATH = process.env.PLUGINS_PATH ?? "plugins";
-	export const META_DB_PATH = process.env.DB_PATH ?? "data/db.sqlite";
-	export const META_DB_BACKUP_PATH = process.env.DB_BACKUP_PATH ?? null;
-	export const META_LOG_PATH = process.env.LOG_PATH ?? "data/logs";
+	export const META_PORT = process.env.META_PORT ?? 31314;
+	export const META_PLUGINS_PATH = process.env.META_PLUGINS_PATH ?? "plugins";
+	export const META_DB_PATH = process.env.META_DB_PATH ?? "data/db.sqlite";
+	export const META_DB_BACKUP_PATH = process.env.META_DB_BACKUP_PATH ?? null;
+	export const META_LOG_PATH = process.env.META_LOG_PATH ?? "data/logs";
 }
 
 export default Meta;
