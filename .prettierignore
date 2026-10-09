@@ -1,3 +1,4 @@
 package-lock.json
+migrations/
 node_modules/
 dist/
