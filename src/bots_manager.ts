@@ -399,7 +399,7 @@ export class BotManager {
 		Logger.info("Start bots_manager initializing.");
 
 		Logger.info("- Initializing plugins.");
-		this.plugins = await BotManager.loadPlugins();
+		this.plugins = await BotManager.loadPlugins().catch(() => []);
 		this.plugins.forEach((plugin) => {
 			Logger.info(`- Loaded plugin ${plugin.name}.`);
 			if (plugin.onLoad) {
