@@ -1,6 +1,6 @@
 {
 	"name": "@ttvmech/plugin-examples",
-	"version": "2.0.0-beta-1",
+	"version": "2.0.0-beta-2",
 	"type": "module",
 	"private": true,
 	"scripts": {
@@ -8,6 +8,6 @@
 		"clean": "tsc --build --clean"
 	},
 	"dependencies": {
-		"@ttvmech/plugin-api": "^2.0.0-beta-1"
+		"@ttvmech/plugin-api": "^2.0.0-beta-2"
 	}
 }
