@@ -1,0 +1,818 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "8eaf81a4-acaf-4d91-b3b1-9b74b0a84074",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "command_aliases",
+      "entityType": "tables"
+    },
+    {
+      "name": "commands",
+      "entityType": "tables"
+    },
+    {
+      "name": "settings",
+      "entityType": "tables"
+    },
+    {
+      "name": "twitch_bots",
+      "entityType": "tables"
+    },
+    {
+      "name": "twitch_channels",
+      "entityType": "tables"
+    },
+    {
+      "name": "twitch_user_permissions",
+      "entityType": "tables"
+    },
+    {
+      "name": "twitch_users",
+      "entityType": "tables"
+    },
+    {
+      "name": "user_csrfs",
+      "entityType": "tables"
+    },
+    {
+      "name": "user_sessions",
+      "entityType": "tables"
+    },
+    {
+      "name": "users",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "trigger",
+      "entityType": "columns",
+      "table": "command_aliases"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "alias",
+      "entityType": "columns",
+      "table": "command_aliases"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "active",
+      "entityType": "columns",
+      "table": "command_aliases"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "trigger",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "active",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "req_score",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_cooldown",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "chat_cooldown",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "response",
+      "entityType": "columns",
+      "table": "commands"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "init",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_client_id",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_client_secret",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'/'",
+      "generated": null,
+      "name": "root_path",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "999",
+      "generated": null,
+      "name": "mod_score",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "ban_score",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'!'",
+      "generated": null,
+      "name": "cmd_prefix",
+      "entityType": "columns",
+      "table": "settings"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_id",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_uname",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_dname",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_client_id",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_scopes",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_access_token",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_refresh_token",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "expire_unix_ms",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "faulty",
+      "entityType": "columns",
+      "table": "twitch_bots"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_id",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_uname",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_dname",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "active",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "offline_only",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "bot_twitch_id",
+      "entityType": "columns",
+      "table": "twitch_channels"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "uuid",
+      "entityType": "columns",
+      "table": "twitch_user_permissions"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "twitch_user_permissions"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "score",
+      "entityType": "columns",
+      "table": "twitch_user_permissions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_id",
+      "entityType": "columns",
+      "table": "twitch_users"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_uname",
+      "entityType": "columns",
+      "table": "twitch_users"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "twitch_dname",
+      "entityType": "columns",
+      "table": "twitch_users"
+    },
+    {
+      "type": "blob",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "points",
+      "entityType": "columns",
+      "table": "twitch_users"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "perm_uuid",
+      "entityType": "columns",
+      "table": "twitch_users"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "user_csrfs"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "session_id",
+      "entityType": "columns",
+      "table": "user_csrfs"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "expire_unix_ms",
+      "entityType": "columns",
+      "table": "user_csrfs"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "user_sessions"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_uuid",
+      "entityType": "columns",
+      "table": "user_sessions"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "expire_unix_ms",
+      "entityType": "columns",
+      "table": "user_sessions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "uuid",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "pass_hash",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "salt",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "is_admin",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "is_super_admin",
+      "entityType": "columns",
+      "table": "users"
+    },
+    {
+      "columns": [
+        "trigger"
+      ],
+      "tableTo": "commands",
+      "columnsTo": [
+        "trigger"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_command_aliases_trigger_commands_trigger_fk",
+      "entityType": "fks",
+      "table": "command_aliases"
+    },
+    {
+      "columns": [
+        "bot_twitch_id"
+      ],
+      "tableTo": "twitch_bots",
+      "columnsTo": [
+        "twitch_id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_twitch_channels_bot_twitch_id_twitch_bots_twitch_id_fk",
+      "entityType": "fks",
+      "table": "twitch_channels"
+    },
+    {
+      "columns": [
+        "perm_uuid"
+      ],
+      "tableTo": "twitch_user_permissions",
+      "columnsTo": [
+        "uuid"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_twitch_users_perm_uuid_twitch_user_permissions_uuid_fk",
+      "entityType": "fks",
+      "table": "twitch_users"
+    },
+    {
+      "columns": [
+        "session_id"
+      ],
+      "tableTo": "user_sessions",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_user_csrfs_session_id_user_sessions_id_fk",
+      "entityType": "fks",
+      "table": "user_csrfs"
+    },
+    {
+      "columns": [
+        "user_uuid"
+      ],
+      "tableTo": "users",
+      "columnsTo": [
+        "uuid"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_user_sessions_user_uuid_users_uuid_fk",
+      "entityType": "fks",
+      "table": "user_sessions"
+    },
+    {
+      "columns": [
+        "trigger"
+      ],
+      "nameExplicit": false,
+      "name": "command_aliases_pk",
+      "table": "command_aliases",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "trigger"
+      ],
+      "nameExplicit": false,
+      "name": "commands_pk",
+      "table": "commands",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "settings_pk",
+      "table": "settings",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "twitch_id"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_bots_pk",
+      "table": "twitch_bots",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "twitch_id"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_channels_pk",
+      "table": "twitch_channels",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "uuid"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_user_permissions_pk",
+      "table": "twitch_user_permissions",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "twitch_id"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_users_pk",
+      "table": "twitch_users",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "user_csrfs_pk",
+      "table": "user_csrfs",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "user_sessions_pk",
+      "table": "user_sessions",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "uuid"
+      ],
+      "nameExplicit": false,
+      "name": "users_pk",
+      "table": "users",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "alias"
+      ],
+      "nameExplicit": false,
+      "name": "command_aliases_alias_unique",
+      "entityType": "uniques",
+      "table": "command_aliases"
+    },
+    {
+      "columns": [
+        "twitch_uname"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_bots_twitch_uname_unique",
+      "entityType": "uniques",
+      "table": "twitch_bots"
+    },
+    {
+      "columns": [
+        "twitch_uname"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_channels_twitch_uname_unique",
+      "entityType": "uniques",
+      "table": "twitch_channels"
+    },
+    {
+      "columns": [
+        "name"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_user_permissions_name_unique",
+      "entityType": "uniques",
+      "table": "twitch_user_permissions"
+    },
+    {
+      "columns": [
+        "twitch_uname"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_users_twitch_uname_unique",
+      "entityType": "uniques",
+      "table": "twitch_users"
+    },
+    {
+      "columns": [
+        "twitch_dname"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_users_twitch_dname_unique",
+      "entityType": "uniques",
+      "table": "twitch_users"
+    },
+    {
+      "columns": [
+        "points"
+      ],
+      "nameExplicit": false,
+      "name": "twitch_users_points_unique",
+      "entityType": "uniques",
+      "table": "twitch_users"
+    },
+    {
+      "columns": [
+        "name"
+      ],
+      "nameExplicit": false,
+      "name": "users_name_unique",
+      "entityType": "uniques",
+      "table": "users"
+    }
+  ],
+  "renames": []
+}
