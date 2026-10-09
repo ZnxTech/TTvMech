@@ -1,5 +1,6 @@
 import NodeFS from "node:fs";
 import NodePath from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { eq, inArray } from "drizzle-orm";
 
@@ -13,7 +14,6 @@ import { tables } from "./db_schema.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";
 import { Util as TwitchUtil } from "./twitch.js";
-import { pathToFileURL } from "node:url";
 
 interface Command {
 	trigger: string;
