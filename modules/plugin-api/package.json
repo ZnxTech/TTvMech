@@ -11,6 +11,10 @@
 		"./schemas": {
 			"import": "./dist/schemas.js",
 			"types": "./dist/schemas.d.ts"
+		},
+		"./util": {
+			"import": "./dist/util.js",
+			"types": "./dist/util.d.ts"
 		}
 	},
 	"scripts": {

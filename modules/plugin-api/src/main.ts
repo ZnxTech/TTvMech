@@ -41,6 +41,8 @@ export interface PluginState {
 	getTwitchAppAuth(): Promise<string>;
 	getYoutubeAppAuth(): Promise<string>;
 	getKickAppAuth(): Promise<string>;
+
+	getCommandPrefix(): string;
 }
 
 export interface Plugin {
