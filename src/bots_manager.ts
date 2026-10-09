@@ -57,7 +57,7 @@ export class BotManager {
 		this.twitch_bots = new Map();
 	}
 
-	private static getPluginState(): PluginState {
+	private getPluginState(): PluginState {
 		return {
 			getTwitchAppAuth: async () => {
 				const auth = await TwitchUtil.getAppAuth();
@@ -68,6 +68,9 @@ export class BotManager {
 			},
 			getKickAppAuth: async () => {
 				throw new Error("Kick app auth unavilable");
+			},
+			getCommandPrefix: () => {
+				return this.command_prefix;
 			},
 		};
 	}
@@ -248,7 +251,7 @@ export class BotManager {
 	private onBotMessage(plugin_bot: PluginBot, ev: MessageEvent) {
 		this.plugins.forEach((plugin) => {
 			if (plugin.onMessage) {
-				const plugin_state = BotManager.getPluginState();
+				const plugin_state = this.getPluginState();
 				plugin.onMessage(plugin_state, plugin_bot, ev);
 			}
 		});
@@ -259,7 +262,7 @@ export class BotManager {
 	private onBotStream(plugin_bot: PluginBot, ev: ChannelEvent) {
 		this.plugins.forEach((plugin) => {
 			if (plugin.onStream) {
-				const plugin_state = BotManager.getPluginState();
+				const plugin_state = this.getPluginState();
 				plugin.onStream(plugin_state, plugin_bot, ev);
 			}
 		});
@@ -270,7 +273,7 @@ export class BotManager {
 	private onBotJoin(plugin_bot: PluginBot, ev: ChannelEvent) {
 		this.plugins.forEach((plugin) => {
 			if (plugin.onJoin) {
-				const plugin_state = BotManager.getPluginState();
+				const plugin_state = this.getPluginState();
 				plugin.onJoin(plugin_state, plugin_bot, ev);
 			}
 		});
@@ -279,7 +282,7 @@ export class BotManager {
 	private onBotPart(plugin_bot: PluginBot, ev: ChannelEvent) {
 		this.plugins.forEach((plugin) => {
 			if (plugin.onPart) {
-				const plugin_state = BotManager.getPluginState();
+				const plugin_state = this.getPluginState();
 				plugin.onPart(plugin_state, plugin_bot, ev);
 			}
 		});
@@ -400,7 +403,7 @@ export class BotManager {
 		this.plugins.forEach((plugin) => {
 			Logger.info(`- Loaded plugin ${plugin.name}.`);
 			if (plugin.onLoad) {
-				const plugin_state = BotManager.getPluginState();
+				const plugin_state = this.getPluginState();
 				plugin.onLoad(plugin_state);
 			}
 		});
