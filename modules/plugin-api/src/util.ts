@@ -72,8 +72,12 @@ export class CommandBuilder {
 					const [token_key, ...token_values] = token.split("=");
 					const token_value = token_values.join("=");
 
+					if (!token_key) {
+						throw new Error("Unexpected string change or parse error.");
+					}
+
 					// split always returns at least one element in this case.
-					const key = token_key!.replace(/^-{1,2}/, "");
+					const key = token_key.replace(/^-{1,2}/, "");
 					const value = token_value === "" ? next : (token_value ?? null);
 
 					return { key, value: value?.match(/^-{1,2}[a-zA-Z0-9]+(=.*)?$/) ? null : value };
