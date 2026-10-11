@@ -113,22 +113,23 @@ app.use(middleInitRedirect(true, "/init"), middleAuthRedirect(true, false, "/das
 			view: "routes/bots.ejs",
 			session: res.locals.session,
 		});
-	})
+	});
+
+app.use(middleInitRedirect(true, "/init"), middleAuthRedirect(true, true, "/dashboard"))
 	.get("/settings", (req, res) => {
 		res.render("base.ejs", {
 			meta: ejs_meta,
 			view: "routes/settings.ejs",
 			session: res.locals.session,
 		});
+	})
+	.get("/users", (req, res) => {
+		res.render("base.ejs", {
+			meta: ejs_meta,
+			view: "routes/users.ejs",
+			session: res.locals.session,
+		});
 	});
-
-app.use(middleInitRedirect(true, "/init"), middleAuthRedirect(true, true, "/dashboard")).get("/users", (req, res) => {
-	res.render("base.ejs", {
-		meta: ejs_meta,
-		view: "routes/users.ejs",
-		session: res.locals.session,
-	});
-});
 
 app.get("*path", middleInitRedirect(true, "/init"), (req, res) => {
 	res.redirect("/dashboard");
