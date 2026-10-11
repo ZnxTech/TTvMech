@@ -1,8 +1,18 @@
 {
 	"name": "@ttvmech/plugin-api",
+	"description": "Plugin API for TTvMech",
+	"author": { "name": "ZnxTech" },
 	"version": "2.0.0-beta-2",
+
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ZnxTech/TTvMech.git",
+		"directory": "modules/plugin-api"
+	},
+	"license": "GPL-3.0-only",
+
 	"type": "module",
-	"private": true,
+	"private": false,
 	"exports": {
 		".": {
 			"import": "./dist/main.js",
