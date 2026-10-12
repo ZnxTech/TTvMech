@@ -1,16 +1,16 @@
 {
 	"name": "@ttvmech/twitch-api",
 	"description": "Twitch API for TTvMech",
-	"author": { "name": "ZnxTech" },
+	"author": {
+		"name": "ZnxTech"
+	},
 	"version": "2.0.0-beta-2",
-
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ZnxTech/TTvMech.git",
 		"directory": "modules/twitch-api"
 	},
 	"license": "GPL-3.0-only",
-
 	"type": "module",
 	"private": false,
 	"exports": {

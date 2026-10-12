@@ -1,15 +1,15 @@
 {
 	"name": "ttvmech",
 	"description": "A simple extendable Twitch bot manager with a light EJS + HTMX web interface",
-	"author": { "name": "ZnxTech" },
+	"author": {
+		"name": "ZnxTech"
+	},
 	"version": "2.0.0-beta-2",
-
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ZnxTech/TTvMech.git"
 	},
 	"license": "GPL-3.0-only",
-
 	"module": "dist/main.js",
 	"type": "module",
 	"private": false,
