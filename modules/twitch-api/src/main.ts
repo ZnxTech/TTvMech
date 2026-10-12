@@ -317,6 +317,48 @@ export namespace Helix {
 		}
 	}
 
+	// Ref: https://dev.twitch.tv/docs/api/reference/#ban-user
+	export async function BanUser<A extends Auth>(
+		auth: A,
+		data: {
+			broadcaster_id: string;
+			moderator_id: string;
+			user_id: string;
+			duration?: number;
+			reason?: string;
+		}
+	): Promise<Z.infer<typeof APISchemas.BAN_USER>> {
+		const url = new URL("https://api.twitch.tv/helix/moderation/bans");
+		url.searchParams.append("id", data.broadcaster_id);
+		url.searchParams.append("login", data.moderator_id);
+
+		const res = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Authorization": `Bearer ${auth.token()}`,
+				"Client-Id": auth.clientId(),
+			},
+			body: JSON.stringify({
+				user_id: data.user_id,
+				duration: data.duration,
+				reason: data.reason,
+			}),
+		});
+
+		if (!res.ok) {
+			throw new Error("Failed to ban user");
+		}
+
+		const body = await res.json();
+
+		const json = APISchemas.BAN_USER.safeParse(body);
+		if (json.success) {
+			return json.data;
+		} else {
+			throw new Error("Invalid bans json recived");
+		}
+	}
+
 	// Ref: https://dev.twitch.tv/docs/api/reference/#get-streams
 	export async function getStreams<A extends Auth>(
 		auth: A,

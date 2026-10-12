@@ -129,6 +129,18 @@ export namespace APISchemas {
 		}),
 	});
 
+	const BAN_USER_BAN = Z.object({
+		broadcaster_id: Z.string(),
+		moderator_id: Z.string(),
+		user_id: Z.string(),
+		created_at: Z.iso.datetime(),
+		end_time: Z.iso.datetime().nullable(),
+	});
+
+	export const BAN_USER = Z.object({
+		data: BAN_USER_BAN,
+	});
+
 	const GET_STREAMS_STREAM = Z.object({
 		id: Z.string(),
 		user_id: Z.string(),
