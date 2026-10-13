@@ -13,6 +13,9 @@
 	"license": "GPL-3.0-only",
 	"type": "module",
 	"private": false,
+	"files": [
+		"dist"
+	],
 	"exports": {
 		".": {
 			"import": "./dist/main.js",
