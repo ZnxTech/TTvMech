@@ -329,8 +329,8 @@ export namespace Helix {
 		}
 	): Promise<Z.infer<typeof APISchemas.BAN_USER>> {
 		const url = new URL("https://api.twitch.tv/helix/moderation/bans");
-		url.searchParams.append("id", data.broadcaster_id);
-		url.searchParams.append("login", data.moderator_id);
+		url.searchParams.append("broadcaster_id", data.broadcaster_id);
+		url.searchParams.append("moderator_id", data.moderator_id);
 
 		const res = await fetch(url, {
 			method: "POST",
