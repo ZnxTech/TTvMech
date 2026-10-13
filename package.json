@@ -4,7 +4,7 @@
 	"author": {
 		"name": "ZnxTech"
 	},
-	"version": "2.0.0-beta-2",
+	"version": "2.0.0-beta-3",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ZnxTech/TTvMech.git"
@@ -29,8 +29,8 @@
 		"start": "node dist/main.js"
 	},
 	"dependencies": {
-		"@ttvmech/plugin-api": "^2.0.0-beta-2",
-		"@ttvmech/twitch-api": "^2.0.0-beta-2",
+		"@ttvmech/plugin-api": "^2.0.0-beta-3",
+		"@ttvmech/twitch-api": "^2.0.0-beta-3",
 		"cookie-parser": "^1.4.7",
 		"drizzle-kit": "^1.0.0-rc.4",
 		"drizzle-orm": "^1.0.0-rc.4",
