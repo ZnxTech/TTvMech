@@ -318,7 +318,7 @@ export namespace Helix {
 	}
 
 	// Ref: https://dev.twitch.tv/docs/api/reference/#ban-user
-	export async function BanUser<A extends Auth>(
+	export async function banUser<A extends Auth>(
 		auth: A,
 		data: {
 			broadcaster_id: string;
