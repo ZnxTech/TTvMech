@@ -359,6 +359,33 @@ export namespace Helix {
 		}
 	}
 
+	// Ref: https://dev.twitch.tv/docs/api/reference/#unban-user
+	export async function unbanUser<A extends Auth>(
+		auth: A,
+		data: {
+			broadcaster_id: string;
+			moderator_id: string;
+			user_id: string;
+		}
+	): Promise<void> {
+		const url = new URL("https://api.twitch.tv/helix/moderation/bans");
+		url.searchParams.append("broadcaster_id", data.broadcaster_id);
+		url.searchParams.append("moderator_id", data.moderator_id);
+		url.searchParams.append("user_id", data.user_id);
+
+		const res = await fetch(url, {
+			method: "DELETE",
+			headers: {
+				"Authorization": `Bearer ${auth.token()}`,
+				"Client-Id": auth.clientId(),
+			},
+		});
+
+		if (!res.ok) {
+			throw new Error("Failed to unban user");
+		}
+	}
+
 	// Ref: https://dev.twitch.tv/docs/api/reference/#get-streams
 	export async function getStreams<A extends Auth>(
 		auth: A,
