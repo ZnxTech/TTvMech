@@ -18,7 +18,10 @@
 	"type": "module",
 	"private": false,
 	"files": [
-		"dist"
+		"dist",
+		"migrations",
+		"www",
+		"drizzle.config.ts"
 	],
 	"scripts": {
 		"build": "tsc --build",
