@@ -1,4 +1,4 @@
-import { plugin } from "@ttvmech/plugin-api";
+import { plugin } from "@znxtech/ttvmech-plugin-api";
 
 export default plugin({
 	name: "example_hey",

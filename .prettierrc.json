@@ -7,7 +7,7 @@
 	"singleQuote": false,
 	"quoteProps": "preserve",
 	"trailingComma": "es5",
-	"importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "^@ttvmech/(.*)$", "^[./]"],
+	"importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "^@znxtech/(.*)$", "^[./]"],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true
 }

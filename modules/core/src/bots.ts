@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 
-import { ChannelEvent, MessageEvent, PluginBot } from "@ttvmech/plugin-api";
-import { EventSub, Helix, BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
-import { EventSubWebSocket, EventSubWebSocketSession } from "@ttvmech/twitch-api/eventsub";
-import { EventSubSchemas } from "@ttvmech/twitch-api/schemas";
+import { ChannelEvent, MessageEvent, PluginBot } from "@znxtech/ttvmech-plugin-api";
+import { EventSub, Helix, BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
+import { EventSubWebSocket, EventSubWebSocketSession } from "@znxtech/ttvmech-twitch-api/eventsub";
+import { EventSubSchemas } from "@znxtech/ttvmech-twitch-api/schemas";
 
 import { db } from "./db.js";
 import { tables } from "./db_schema.js";

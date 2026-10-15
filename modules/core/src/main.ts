@@ -135,4 +135,5 @@ app.get("*path", middleInitRedirect(true, "/init"), (req, res) => {
 	res.redirect("/dashboard");
 });
 
+Logger.info(`Started serving on port ${Meta.META_PORT}`);
 app.listen(Meta.META_PORT);

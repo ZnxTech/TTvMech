@@ -1,5 +1,5 @@
 {
-	"name": "@ttvmech/twitch-api",
+	"name": "@znxtech/ttvmech-twitch-api",
 	"description": "Twitch API for TTvMech",
 	"author": {
 		"name": "ZnxTech"
@@ -9,6 +9,9 @@
 		"type": "git",
 		"url": "git+https://github.com/ZnxTech/TTvMech.git",
 		"directory": "modules/twitch-api"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com/"
 	},
 	"license": "GPL-3.0-only",
 	"type": "module",

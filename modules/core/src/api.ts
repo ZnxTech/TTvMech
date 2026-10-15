@@ -3,13 +3,14 @@ import Express from "express";
 import Qs from "qs";
 import Z from "zod";
 
-import { Helix, BotAuth as TwitchBotAuth } from "@ttvmech/twitch-api";
+import { Helix, BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
 import Auth from "./auth.js";
 import { TwitchBot } from "./bots.js";
 import { bot_manager } from "./bots_manager.js";
 import { Util as DBUtil, db } from "./db.js";
 import { table_twitch_bots, tables } from "./db_schema.js";
+import { Logger } from "./log.js";
 import Meta from "./meta.js";
 import { Util as TwitchUtil } from "./twitch.js";
 
@@ -89,6 +90,7 @@ export namespace API.V1 {
 
 			try {
 				const [session_id, expires_in] = Auth.createUserSession(body.data.user_name, body.data.user_pass);
+				Logger.info(`User "${body.data.user_name}" logged in.`);
 				res.cookie("session_id", session_id, {
 					maxAge: expires_in,
 					sameSite: "lax",

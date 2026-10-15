@@ -1,5 +1,5 @@
 {
-	"name": "@ttvmech/plugin-api",
+	"name": "@znxtech/ttvmech-plugin-api",
 	"description": "Plugin API for TTvMech",
 	"author": {
 		"name": "ZnxTech"
@@ -9,6 +9,9 @@
 		"type": "git",
 		"url": "git+https://github.com/ZnxTech/TTvMech.git",
 		"directory": "modules/plugin-api"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com/"
 	},
 	"license": "GPL-3.0-only",
 	"type": "module",

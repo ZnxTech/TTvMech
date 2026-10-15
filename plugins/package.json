@@ -8,6 +8,6 @@
 		"clean": "tsc --build --clean"
 	},
 	"dependencies": {
-		"@ttvmech/plugin-api": "^2.0.0-beta-3"
+		"@znxtech/ttvmech-plugin-api": "^2.0.0-beta-3"
 	}
 }
