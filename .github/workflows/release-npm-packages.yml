@@ -1,0 +1,54 @@
+name: build and publish npm packages on release
+
+on:
+    release:
+        types: [published]
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    build-publish-packages:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v6
+              with:
+                  persist-credentials: false
+
+            - name: setup node
+              uses: actions/setup-node@v7
+              with:
+                  node-version: "24"
+                  registry-url: https://npm.pkg.github.com/
+                  scope: "@znxtech"
+
+            - name: build and test packages
+              run: |
+                  npm ci
+                  npm run build
+                  npm test --if-present
+
+            - name: parse npm tag for packages
+              id: npm-tag
+              shell: bash
+              env:
+                  RELEASE_TAG: ${{ github.event.release.tag_name }}
+              run: | # parses "tagname" out of "major.minor.patch-tagname-tagiter"
+                  if [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+\-([a-zA-Z]+)(-[0-9]+)?$ ]]; then
+                      npm_tag="${BASH_REMATCH[1]}"
+                  elif [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]& ]]; then
+                      npm_tag="latest"
+                  else
+                    echo "Unexpected release tag: $RELEASE_TAG" >&2
+                    exit 1
+                  fi
+
+                  echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
+
+            - name: publish packages
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TAG: ${{ steps.npm-tag.outputs.npm_tag }}
+              run: npm publish --workspaces --tag "$NPM_TAG"
