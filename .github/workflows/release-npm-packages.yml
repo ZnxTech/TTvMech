@@ -38,7 +38,7 @@ jobs:
               run: | # parses "tagname" out of "major.minor.patch-tagname-tagiter"
                   if [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+\-([a-zA-Z]+)(-[0-9]+)?$ ]]; then
                       npm_tag="${BASH_REMATCH[1]}"
-                  elif [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]& ]]; then
+                  elif [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
                       npm_tag="latest"
                   else
                       echo "Unexpected release tag: $RELEASE_TAG" >&2
