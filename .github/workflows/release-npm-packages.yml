@@ -9,7 +9,7 @@ permissions:
     packages: write
 
 jobs:
-    build-publish-packages:
+    build-publish-npm-packages:
         runs-on: ubuntu-latest
         steps:
             - name: checkout
