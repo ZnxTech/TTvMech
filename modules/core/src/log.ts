@@ -29,9 +29,12 @@ export namespace Logger {
 	}
 
 	const filestream = (() => {
-		const path = NodePath.join(Meta.META_LOG_PATH, `${getFileTimestamp()}.log.txt`);
-		NodeFS.mkdirSync(Meta.META_LOG_PATH, { recursive: true });
-		return NodeFS.createWriteStream(path, { flags: "a+", encoding: "utf8" });
+		// Resolve db path and create parent directories if they are missing.
+		const log_dir_path = NodePath.resolve(Meta.META_LOG_PATH);
+		NodeFS.mkdirSync(log_dir_path, { recursive: true });
+
+		const log_file_path = NodePath.join(log_dir_path, `${getFileTimestamp()}.log.txt`);
+		return NodeFS.createWriteStream(log_file_path, { flags: "a+", encoding: "utf8" });
 	})();
 
 	function log(level: string, level_color: string, message: string) {

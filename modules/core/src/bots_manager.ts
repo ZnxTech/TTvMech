@@ -1,6 +1,5 @@
 import NodeFS from "node:fs";
 import NodePath from "node:path";
-import { pathToFileURL } from "node:url";
 
 import { eq, inArray } from "drizzle-orm";
 
@@ -106,16 +105,18 @@ export class BotManager {
 	}
 
 	private static async loadPlugins(): Promise<Plugin[]> {
-		const files = await NodeFS.promises.readdir(Meta.META_PLUGINS_PATH, {
-			withFileTypes: true,
-			recursive: true,
-		});
+		const plugins_path = NodePath.resolve(Meta.META_PLUGINS_PATH);
+		const files = await NodeFS.promises
+			.readdir(plugins_path, {
+				withFileTypes: true,
+			})
+			.catch(() => []);
 
 		const imports = files
-			.filter((file) => file.isFile() && file.name.endsWith(".plugin.js"))
+			.filter((file) => file.isDirectory() && file.name.endsWith(".plugin"))
 			.map((file) => {
-				const absolute_path = NodePath.resolve(process.cwd(), file.parentPath, file.name);
-				return import(pathToFileURL(absolute_path).href);
+				const plugin_package_path = NodePath.resolve(file.parentPath, file.name);
+				return import(plugin_package_path);
 			});
 
 		const parses = (await Promise.allSettled(imports))

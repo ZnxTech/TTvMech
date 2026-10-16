@@ -26,7 +26,6 @@
 	"scripts": {
 		"build": "tsc --build",
 		"clean": "tsc --build --clean",
-		"prestart": "drizzle-kit migrate",
 		"start": "node dist/main.js"
 	},
 	"dependencies": {
