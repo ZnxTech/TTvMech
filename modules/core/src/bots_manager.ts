@@ -402,7 +402,7 @@ export class BotManager {
 		Logger.info("- Initializing plugins.");
 		this.plugins = await BotManager.loadPlugins().catch(() => []);
 		this.plugins.forEach((plugin) => {
-			Logger.info(`- Loaded plugin ${plugin.name}.`);
+			Logger.info(`- Loaded plugin "${plugin.name}".`);
 			if (plugin.onLoad) {
 				const plugin_state = this.getPluginState();
 				plugin.onLoad(plugin_state);
