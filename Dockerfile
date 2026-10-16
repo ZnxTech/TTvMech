@@ -1,13 +1,14 @@
 FROM node:26-alpine
 
 WORKDIR /ttvmech
-RUN ["mkdir", "-m", "755", "data"]
-
-COPY ./package*.json .
-RUN ["npm", "ci"]
 
 COPY . .
+RUN ["npm", "ci"]
 RUN ["npm", "run", "build"]
+
+ENV META_PLUGINS_PATH="/ttvmech/plugins"
+ENV META_DB_PATH="/ttvmech/data/db"
+ENV META_LOG_PATH="/ttvmech/data/logs"
 
 EXPOSE 31314
 
