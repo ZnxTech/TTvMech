@@ -83,7 +83,7 @@ export namespace HTMX.V1 {
 			.orderBy(tables.twitch_bots.twitch_id)
 			.all();
 
-		const selected_result = Z.string().optional().safeParse(req.query.id);
+		const selected_result = Z.string().optional().safeParse(req.query.selected_id);
 		const selected = selected_result.success ? (selected_result.data ?? null) : null;
 
 		res.render("elements/channel_bots.ejs", { bots: bots, selected: selected });

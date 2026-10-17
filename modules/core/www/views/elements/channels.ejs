@@ -1,8 +1,10 @@
 <% for (const channel of channels) { %>
-    <div id="channel-twitch-<%= channel.id %>">
+    <div id="channel-twitch-<%= channel.id %>" class="cnt">
         <div class="flx box row g-1">
             <div class="box tx-b bg-twitch">Twitch</div>
-            <div class="box tx-b mrg-auto-right"><%= channel.dname %></div>
+            <div class="box tx-b"><%= channel.dname %></div>
+            <input id="channel-twitch-<%= channel.id %>-clp" class="clp-chk" type="checkbox">
+            <label for="channel-twitch-<%= channel.id %>-clp" class="btn mrg-auto-left tx-b">Edit</label>
             <div class="box btn tx-b bg-red"
                 hx-delete="/api/v1/channels/twitch:<%= channel.id %>"
                 hx-target="#channel-twitch-<%= channel.id %>"
@@ -10,5 +12,27 @@
                 Delete
             </div>
         </div>
+        <form class="clp flx box col g-1"
+            hx-put="/api/v1/channels/twitch:<%= channel.id %>"
+            hx-swap="none">
+            <div class="flx row g-1">
+                <div class="flx col flx-1">
+                    <label for="channel-twitch-<%= channel.id %>-input_bot">Assigned Bot:</label>
+                    <select id="channel-twitch-<%= channel.id %>-input_bot" name="bot_origin_id"
+                        hx-get="/htmx/v1/channels/bots/twitch?selected_id=<%= channel.bot_id %>"
+                        hx-trigger="load"
+                        hx-target="#channel-twitch-<%= channel.id %>-input_bot"
+                        hx-swap="innerHTML">
+                        <option value="none">none</option>
+                    </select>
+                </div>
+                <label class="rad-btn tx-b mrg-auto-top" for="channel-twitch-<%= channel.id %>-input_offline_only">
+                    <input id="channel-twitch-<%= channel.id %>-input_offline_only" class="rad-chk" type="checkbox" name="offline_only"
+                        <%= channel.offline_only ? "checked" : "" %>>
+                    Offline Only
+                </label>
+            </div>
+            <button class="btn tx-b" type="submit">Submit</button>
+        </form>
     </div>
 <% } %>
