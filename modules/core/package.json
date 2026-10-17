@@ -1,6 +1,6 @@
 {
 	"name": "@znxtech/ttvmech",
-	"description": "A simple extendable Twitch bot manager with a light EJS + HTMX web interface",
+	"description": "a stream chat bot manager using Nodejs, EJS and HTMX",
 	"author": {
 		"name": "ZnxTech"
 	},
