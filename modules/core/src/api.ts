@@ -320,7 +320,7 @@ export namespace API.V1 {
 		}
 	}
 
-	ROUTER.route("/channels").post(Auth.middleSessionAuth(true, false), (req, res) => {
+	ROUTER.route("/channels").post(Auth.middleSessionAuth(true, false), async (req, res) => {
 		const body = Z.object({
 			origin: Z.enum(["twitch", "youtube", "kick"]),
 			channel_origin_id: Z.string().trim().nonempty(),
@@ -338,7 +338,7 @@ export namespace API.V1 {
 		try {
 			switch (body.data.origin) {
 				case "twitch":
-					handleChannelPostTwitch(body.data.channel_origin_id, bot_origin_id, offline_only);
+					await handleChannelPostTwitch(body.data.channel_origin_id, bot_origin_id, offline_only);
 					break;
 
 				case "youtube":
