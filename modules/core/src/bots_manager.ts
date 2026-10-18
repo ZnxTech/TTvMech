@@ -2,6 +2,7 @@ import NodeFS from "node:fs";
 import NodePath from "node:path";
 
 import { eq, inArray } from "drizzle-orm";
+import Z from "zod";
 
 import { ChannelEvent, MessageEvent, Plugin, PluginBot, PluginState } from "@znxtech/ttvmech-plugin-api";
 import { PLUGIN_SCHEMA } from "@znxtech/ttvmech-plugin-api/schemas";
@@ -104,6 +105,23 @@ export class BotManager {
 		return settings?.cmd_prefix ?? "!";
 	}
 
+	private static async importPlugin(plugin_module_path: string): Promise<any> {
+		const package_json_path = NodePath.join(plugin_module_path, "package.json");
+		const package_json_file = await NodeFS.promises.readFile(package_json_path);
+		const package_json = JSON.parse(package_json_file.toString());
+
+		const package_main = await Z.string().optional().parseAsync(package_json.main);
+		const package_export = await Z.string().optional().parseAsync(package_json.exports?.plugin?.import);
+
+		if (package_export) {
+			return await import(NodePath.resolve(plugin_module_path, package_export));
+		} else if (package_main) {
+			return await import(NodePath.resolve(plugin_module_path, package_main));
+		} else {
+			return await import(NodePath.resolve(plugin_module_path, "index.js"));
+		}
+	}
+
 	private static async loadPlugins(): Promise<Plugin[]> {
 		const plugins_path = NodePath.resolve(Meta.META_PLUGINS_PATH);
 		const files = await NodeFS.promises
@@ -114,16 +132,16 @@ export class BotManager {
 
 		const imports = files
 			.filter((file) => file.isDirectory() && file.name.endsWith(".plugin"))
-			.map((file) => {
-				const plugin_package_path = NodePath.resolve(file.parentPath, file.name);
-				return import(plugin_package_path);
+			.map(async (file) => {
+				const plugin_module_path = NodePath.resolve(file.parentPath, file.name);
+				return BotManager.importPlugin(plugin_module_path);
 			});
 
-		const parses = (await Promise.allSettled(imports))
+		const modules = (await Promise.allSettled(imports))
 			.filter((result) => result.status === "fulfilled")
 			.map((result) => PLUGIN_SCHEMA.safeParseAsync(result.value.default));
 
-		return (await Promise.allSettled(parses))
+		return (await Promise.allSettled(modules))
 			.filter((result) => result.status === "fulfilled")
 			.map((result) => result.value)
 			.filter((result) => result.success)
