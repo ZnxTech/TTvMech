@@ -14,7 +14,7 @@
 		"registry": "https://npm.pkg.github.com/"
 	},
 	"license": "GPL-3.0-only",
-	"module": "dist/main.js",
+	"main": "dist/main.js",
 	"type": "module",
 	"private": false,
 	"files": [
