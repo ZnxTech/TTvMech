@@ -297,7 +297,7 @@ export class TwitchBot {
 
 	private async messageSendQueue() {
 		while (true) {
-			const message = this.message_queue.shift();
+			const message = this.message_queue[0];
 
 			if (message) {
 				if (this.messages_sent >= GLOBAL_MESSAGES_PER_30S) {
@@ -307,6 +307,8 @@ export class TwitchBot {
 					}, 1000 * 30);
 					break;
 				}
+
+				this.message_queue.shift();
 
 				this.messages_sent++;
 				const res = await this.messageSendNow(message.channel_id, message.message, message.reply_to_message_id);
