@@ -6,8 +6,8 @@ import Z from "zod";
 import { Helix, BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
 import Auth from "./auth.js";
-import { TwitchBot } from "./bots.js";
-import { bot_manager } from "./bots_manager.js";
+import { TwitchBot } from "./bots/twitch.js";
+import { bot_manager } from "./bots/main.js";
 import { Util as DBUtil, db } from "./db/main.js";
 import { table_twitch_bots, tables } from "./db/schema.js";
 import { Logger } from "./log.js";

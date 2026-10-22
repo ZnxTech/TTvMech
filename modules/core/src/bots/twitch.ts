@@ -5,9 +5,9 @@ import { EventSub, Helix, BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twit
 import { EventSubWebSocket, EventSubWebSocketSession } from "@znxtech/ttvmech-twitch-api/eventsub";
 import { EventSubSchemas } from "@znxtech/ttvmech-twitch-api/schemas";
 
-import { db } from "./db/main.js";
-import { tables } from "./db/schema.js";
-import { Logger } from "./log.js";
+import { db } from "../db/main.js";
+import { tables } from "../db/schema.js";
+import { Logger } from "../log.js";
 
 const GLOBAL_MESSAGES_PER_30S = 20;
 const GLOBAL_MESSAGES_PER_30S_MODDED = 100;

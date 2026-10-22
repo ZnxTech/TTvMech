@@ -8,12 +8,12 @@ import { ChannelEvent, MessageEvent, Plugin, PluginBot, PluginState } from "@znx
 import { PLUGIN_SCHEMA } from "@znxtech/ttvmech-plugin-api/schemas";
 import { BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
-import { TwitchBot } from "./bots.js";
-import { db } from "./db/main.js";
-import { tables } from "./db/schema.js";
-import { Logger } from "./log.js";
-import Meta from "./meta.js";
-import { Util as TwitchUtil } from "./twitch.js";
+import { TwitchBot } from "./twitch.js";
+import { db } from "../db/main.js";
+import { tables } from "../db/schema.js";
+import { Logger } from "../log.js";
+import Meta from "../meta.js";
+import { Util as TwitchUtil } from "../twitch.js";
 
 interface Command {
 	trigger: string;
