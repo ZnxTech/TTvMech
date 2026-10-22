@@ -9,8 +9,8 @@ import { PLUGIN_SCHEMA } from "@znxtech/ttvmech-plugin-api/schemas";
 import { BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
 import { TwitchBot } from "./bots.js";
-import { db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { db } from "./db/main.js";
+import { tables } from "./db/schema.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";
 import { Util as TwitchUtil } from "./twitch.js";

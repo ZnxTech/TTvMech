@@ -2,8 +2,8 @@ import { eq } from "drizzle-orm";
 
 import { AppAuth } from "@znxtech/ttvmech-twitch-api";
 
-import { db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { db } from "./db/main.js";
+import { tables } from "./db/schema.js";
 
 export namespace Util {
 	let auth: AppAuth | undefined;

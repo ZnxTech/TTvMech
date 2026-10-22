@@ -3,8 +3,8 @@ import NodeCrypto from "node:crypto";
 import { eq, inArray, lte } from "drizzle-orm";
 import Express from "express";
 
-import { db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { db } from "./db/main.js";
+import { tables } from "./db/schema.js";
 
 export namespace Auth {
 	function createSessionId(): string {

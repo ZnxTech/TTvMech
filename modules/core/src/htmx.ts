@@ -3,8 +3,8 @@ import Express from "express";
 import Z from "zod";
 
 import Auth from "./auth.js";
-import { db } from "./db.js";
-import { tables } from "./db_schema.js";
+import { db } from "./db/main.js";
+import { tables } from "./db/schema.js";
 
 export namespace HTMX.V1 {
 	export const ROUTER = Express.Router();

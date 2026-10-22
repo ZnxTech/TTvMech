@@ -4,7 +4,7 @@ import Qs from "qs";
 
 import API from "./api.js";
 import Auth from "./auth.js";
-import { Util as DBUtil } from "./db.js";
+import { Util as DBUtil } from "./db/main.js";
 import HTMX from "./htmx.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";

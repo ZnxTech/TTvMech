@@ -6,8 +6,8 @@ import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-sqlite";
 import { migrate } from "drizzle-orm/node-sqlite/migrator";
 
-import { tables } from "./db_schema.js";
-import Meta from "./meta.js";
+import { tables } from "./schema.js";
+import Meta from "../meta.js";
 
 // Resolve db path and create parent directories if they are missing.
 const node_db_path = NodePath.resolve(Meta.META_DB_PATH);
