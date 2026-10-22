@@ -376,7 +376,7 @@ export namespace API.V1 {
 
 		if (!channel) {
 			return;
-		} else if (channel.bot_twitch_id && bot_twitch_id) {
+		} else if (channel.bot_twitch_id && bot_twitch_id && channel.bot_twitch_id !== bot_twitch_id) {
 			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
 			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
 		} else if (channel.bot_twitch_id && !bot_twitch_id) {
