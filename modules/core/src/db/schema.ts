@@ -1,14 +1,23 @@
 import { sqliteTable } from "drizzle-orm/sqlite-core";
 
+export const table_defaults = {
+	settings: {
+		root_path: "/",
+		mod_score: 999,
+		ban_score: 0,
+		cmd_prefix: "1",
+	},
+};
+
 export const table_settings = sqliteTable("settings", (t) => ({
 	id: t.integer().primaryKey(),
 	init: t.integer({ mode: "boolean" }).notNull(),
 	twitch_client_id: t.text(),
 	twitch_client_secret: t.text(),
-	root_path: t.text().notNull().default("/"),
-	mod_score: t.integer().notNull().default(999),
-	ban_score: t.integer().notNull().default(0),
-	cmd_prefix: t.text().notNull().default("!"),
+	root_path: t.text().notNull().default(table_defaults.settings.root_path),
+	mod_score: t.integer().notNull().default(table_defaults.settings.mod_score),
+	ban_score: t.integer().notNull().default(table_defaults.settings.ban_score),
+	cmd_prefix: t.text().notNull().default(table_defaults.settings.cmd_prefix),
 }));
 
 export const table_users = sqliteTable("users", (t) => ({

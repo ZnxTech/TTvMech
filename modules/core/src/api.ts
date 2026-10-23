@@ -6,19 +6,19 @@ import Z from "zod";
 import { Helix, BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
 import Auth from "./auth.js";
+import { manager } from "./bots/main.js";
 import { TwitchBot } from "./bots/twitch.js";
-import { bot_manager } from "./bots/main.js";
-import { Util as DBUtil, db } from "./db/main.js";
-import { table_twitch_bots, tables } from "./db/schema.js";
+import { db } from "./db/main.js";
+import { tables } from "./db/schema.js";
+import { Util as SettingsUtil } from "./db/settings.js";
 import { Logger } from "./log.js";
-import Meta from "./meta.js";
 import { Util as TwitchUtil } from "./twitch.js";
 
 export namespace API.V1 {
 	export const ROUTER = Express.Router();
 
 	ROUTER.route("/meta/init").post((req, res) => {
-		if (DBUtil.settingsIsInit(true)) {
+		if (SettingsUtil.isInit(true)) {
 			res.sendStatus(403);
 		}
 
@@ -35,8 +35,8 @@ export namespace API.V1 {
 
 		Auth.createUser(body.data.admin_name, body.data.admin_pass, true, true);
 
-		DBUtil.settingsUpdateClient(body.data.client_id, body.data.client_secret);
-		DBUtil.settingsSetInitialized();
+		SettingsUtil.updateTwitchClient(body.data.client_id, body.data.client_secret);
+		SettingsUtil.setInitialized();
 
 		res.appendHeader("HX-Redirect", "/dashboard");
 		res.sendStatus(200);
@@ -198,9 +198,9 @@ export namespace API.V1 {
 			return res.status(400).send("Invalid request body.");
 		}
 
-		bot_manager.changeCommandPrefix(body.data.cmd_prefix);
+		manager.changeCommandPrefix(body.data.cmd_prefix);
 
-		DBUtil.settingsUpdate({
+		SettingsUtil.update({
 			cmd_prefix: body.data.cmd_prefix,
 			root_path: body.data.root_path,
 			mod_score: body.data.mod_score,
@@ -219,7 +219,7 @@ export namespace API.V1 {
 			return res.status(400).send("Invalid request body.");
 		}
 
-		DBUtil.settingsUpdateClient(body.data.client_id, body.data.client_secret);
+		SettingsUtil.updateTwitchClient(body.data.client_id, body.data.client_secret);
 		res.sendStatus(200);
 	});
 
@@ -254,7 +254,7 @@ export namespace API.V1 {
 			return res.status(400).send("A command with this trigger already exists.");
 		}
 
-		bot_manager.addCommand({ ...body.data, active: true });
+		manager.addCommand({ ...body.data, active: true });
 		res.appendHeader("HX-Trigger", "ttv:reloadCommands");
 		res.sendStatus(200);
 	});
@@ -275,7 +275,7 @@ export namespace API.V1 {
 
 			const trigger = req.params.command_trigger;
 			const sql_res = db.update(tables.commands).set(body.data).where(eq(tables.commands.trigger, trigger)).run();
-			bot_manager.editCommand(trigger, body.data);
+			manager.editCommand(trigger, body.data);
 
 			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
 			res.sendStatus(200);
@@ -285,7 +285,7 @@ export namespace API.V1 {
 
 			const sql_res = db.delete(tables.commands).where(eq(tables.commands.trigger, trigger)).run();
 
-			bot_manager.removeCommand(trigger);
+			manager.removeCommand(trigger);
 			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
 			res.sendStatus(200);
 		});
@@ -316,7 +316,7 @@ export namespace API.V1 {
 			.run();
 
 		if (bot_twitch_id) {
-			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+			manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
 		}
 	}
 
@@ -377,12 +377,12 @@ export namespace API.V1 {
 		if (!channel) {
 			return;
 		} else if (channel.bot_twitch_id && bot_twitch_id && channel.bot_twitch_id !== bot_twitch_id) {
-			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
-			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+			manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+			manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
 		} else if (channel.bot_twitch_id && !bot_twitch_id) {
-			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+			manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
 		} else if (!channel.bot_twitch_id && bot_twitch_id) {
-			bot_manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
+			manager.joinTwitchBot(bot_twitch_id, channel_twitch_id);
 		}
 	}
 
@@ -402,7 +402,7 @@ export namespace API.V1 {
 			.run();
 
 		if (channel && channel.bot_twitch_id) {
-			bot_manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
+			manager.partTwitchBot(channel.bot_twitch_id, channel_twitch_id);
 		}
 	}
 
@@ -578,7 +578,7 @@ export namespace API.V1 {
 				.run();
 
 			const twitch_bot = new TwitchBot(auth, validation.user_id, validation.login, validation.login);
-			bot_manager.addTwitchBot(twitch_bot);
+			manager.addTwitchBot(twitch_bot);
 
 			res.redirect(307, "/bots");
 		});
@@ -641,7 +641,7 @@ export namespace API.V1 {
 		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
 			const twitch_id = req.params.twitch_id;
 
-			bot_manager.removeTwitchBot(twitch_id);
+			manager.removeTwitchBot(twitch_id);
 			const sql_res = db.delete(tables.twitch_bots).where(eq(tables.twitch_bots.twitch_id, twitch_id)).run();
 
 			if (sql_res.changes == 0) {

@@ -8,12 +8,12 @@ import { ChannelEvent, MessageEvent, Plugin, PluginBot, PluginState } from "@znx
 import { PLUGIN_SCHEMA } from "@znxtech/ttvmech-plugin-api/schemas";
 import { BotAuth as TwitchBotAuth } from "@znxtech/ttvmech-twitch-api";
 
-import { TwitchBot } from "./twitch.js";
 import { db } from "../db/main.js";
 import { tables } from "../db/schema.js";
 import { Logger } from "../log.js";
 import Meta from "../meta.js";
 import { Util as TwitchUtil } from "../twitch.js";
+import { TwitchBot } from "./twitch.js";
 
 interface Command {
 	trigger: string;
@@ -30,7 +30,7 @@ interface CommandCooldown {
 	chat_cooldowns: Map<string, Date>;
 }
 
-export class BotManager {
+export class Manager {
 	private plugins: Plugin[];
 
 	private commands: Map<string, Command>;
@@ -76,21 +76,9 @@ export class BotManager {
 	}
 
 	private static loadCommands(): Command[] {
-		return db
-			.select()
-			.from(tables.commands)
-			.all()
-			.map((data) => {
-				return {
-					trigger: data.trigger,
-					active: data.active,
-					req_score: data.req_score,
-					user_cooldown: data.user_cooldown,
-					chat_cooldown: data.chat_cooldown,
-					description: data.description,
-					response: data.response,
-				};
-			});
+		const commands = db.select().from(tables.commands).all();
+
+		return commands;
 	}
 
 	private static loadCommandPrefix(): string {
@@ -134,7 +122,7 @@ export class BotManager {
 			.filter((file) => file.isDirectory() && file.name.endsWith(".plugin"))
 			.map(async (file) => {
 				const plugin_module_path = NodePath.resolve(file.parentPath, file.name);
-				return BotManager.importPlugin(plugin_module_path);
+				return Manager.importPlugin(plugin_module_path);
 			});
 
 		const modules = (await Promise.allSettled(imports))
@@ -202,7 +190,7 @@ export class BotManager {
 	private static getOriginChatterPermScore(ev: MessageEvent): number {
 		switch (ev.origin) {
 			case "twitch":
-				return BotManager.getTwitchChatterPermScore(ev.chatter_id);
+				return Manager.getTwitchChatterPermScore(ev.chatter_id);
 
 			default:
 				return 0;
@@ -245,7 +233,7 @@ export class BotManager {
 
 			// Check for if the user has permission.
 
-			const chatter_score = BotManager.getOriginChatterPermScore(ev);
+			const chatter_score = Manager.getOriginChatterPermScore(ev);
 
 			if (chatter_score < command.req_score) {
 				return;
@@ -414,11 +402,11 @@ export class BotManager {
 		this.command_prefix = command_prefix;
 	}
 
-	public async init(): Promise<BotManager> {
+	public async init(): Promise<Manager> {
 		Logger.info("Start bots_manager initializing.");
 
 		Logger.info("- Initializing plugins.");
-		this.plugins = await BotManager.loadPlugins().catch(() => []);
+		this.plugins = await Manager.loadPlugins().catch(() => []);
 		this.plugins.forEach((plugin) => {
 			Logger.info(`- Loaded plugin "${plugin.name}".`);
 			if (plugin.onLoad) {
@@ -428,7 +416,7 @@ export class BotManager {
 		});
 
 		Logger.info("- Initializing commands.");
-		const commands = BotManager.loadCommands();
+		const commands = Manager.loadCommands();
 		commands.forEach((command) => {
 			if (!this.commands.has(command.trigger)) {
 				this.commands.set(command.trigger, command);
@@ -439,10 +427,10 @@ export class BotManager {
 			}
 		});
 
-		this.command_prefix = BotManager.loadCommandPrefix();
+		this.command_prefix = Manager.loadCommandPrefix();
 
 		Logger.info("- Initializing Twitch bots.");
-		const twitch_bots = BotManager.loadTwitchBots();
+		const twitch_bots = Manager.loadTwitchBots();
 		twitch_bots.forEach((twitch_bot) => {
 			const twitch_id = twitch_bot.getTwitchId();
 
@@ -479,4 +467,4 @@ export class BotManager {
 	}
 }
 
-export const bot_manager = await new BotManager().init();
+export const manager = await new Manager().init();

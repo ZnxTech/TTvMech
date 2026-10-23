@@ -4,7 +4,7 @@ import Qs from "qs";
 
 import API from "./api.js";
 import Auth from "./auth.js";
-import { Util as DBUtil } from "./db/main.js";
+import { Util as SettingsUtil } from "./db/settings.js";
 import HTMX from "./htmx.js";
 import { Logger } from "./log.js";
 import Meta from "./meta.js";
@@ -31,7 +31,7 @@ app.use("/htmx/v1", HTMX.V1.ROUTER);
 
 function middleInitRedirect(need_init: boolean, route: string): Express.RequestHandler {
 	return (req, res, next) => {
-		if (DBUtil.settingsIsInit(false) === need_init) {
+		if (SettingsUtil.isInit(false) === need_init) {
 			next();
 		} else {
 			res.redirect(route);
