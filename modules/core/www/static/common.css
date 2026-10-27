@@ -376,3 +376,19 @@ option::checkmark {
 	flex-shrink: 0;
 	margin-left: 0.5em;
 }
+
+#message {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -100%);
+
+	max-width: 1024px;
+	transition: ease-out 0.1s;
+}
+
+#message.vis {
+	display: block;
+	top: 2.75rem;
+	transform: translate(-50%, -50%);
+}
