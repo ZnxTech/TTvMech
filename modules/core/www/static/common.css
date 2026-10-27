@@ -318,13 +318,30 @@ option::checkmark {
 	box-shadow: none;
 }
 
-.clp {
-	display: none;
+.clp-btn {
+	background: var(--color-bg5);
+	border: var(--color-bg4) solid 2px;
+
+	padding: 0.5rem;
+
+	text-decoration: none;
+	user-select: none;
+}
+.clp-btn:has(.clp-chk:checked),
+.clp-btn:hover {
+	background: var(--color-bg4);
+	border-color: var(--color-bg3);
+
+	cursor: pointer;
+	box-shadow: 0 0 0.25rem var(--color-bg4);
 }
 .clp-chk {
 	display: none;
 }
-:is(.clp-chk:checked, :has(.clp-chk:checked)) + .clp {
+.clp-box {
+	display: none;
+}
+:is(.clp-chk:checked, :has(.clp-chk:checked)) + .clp-box {
 	display: flex;
 }
 

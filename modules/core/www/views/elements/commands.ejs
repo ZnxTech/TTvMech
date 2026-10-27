@@ -2,8 +2,10 @@
     <div id="command-<%= command.trigger %>" class="cnt">
         <div class="flx box row m-start g-1">
             <div class="box tx-b"><%= command.trigger %></div>
-            <input id="command-<%= command.trigger %>-clp" class="clp-chk" type="checkbox">
-            <label for="command-<%= command.trigger %>-clp" class="btn mrg-auto-left tx-b">Edit</label>
+            <label for="command-<%= command.trigger %>-clp" class="clp-btn mrg-auto-left tx-b">
+                <input id="command-<%= command.trigger %>-clp" class="clp-chk" type="checkbox">
+                Edit
+            </label>
             <div class="bg-red btn tx-b"
                 hx-delete="/api/v1/commands/<%= command.trigger %>"
                 hx-target="#command-<%= command.trigger %>"
@@ -11,7 +13,7 @@
                 Delete
             </div>
         </div>
-        <form class="clp flx box col g-1"
+        <form class="clp-box flx box col g-1"
             hx-put="/api/v1/commands/<%= command.trigger %>"
             hx-swap="none">
             <div class="flx row g-1 x-end">

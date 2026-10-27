@@ -3,8 +3,10 @@
         <div class="flx box row g-1">
             <div class="box tx-b bg-twitch">Twitch</div>
             <div class="box tx-b"><%= channel.dname %></div>
-            <input id="channel-twitch-<%= channel.id %>-clp" class="clp-chk" type="checkbox">
-            <label for="channel-twitch-<%= channel.id %>-clp" class="btn mrg-auto-left tx-b">Edit</label>
+            <label for="channel-twitch-<%= channel.id %>-clp" class="clp-btn mrg-auto-left tx-b">
+                <input id="channel-twitch-<%= channel.id %>-clp" class="clp-chk" type="checkbox">
+                Edit
+            </label>
             <div class="box btn tx-b bg-red"
                 hx-delete="/api/v1/channels/twitch:<%= channel.id %>"
                 hx-target="#channel-twitch-<%= channel.id %>"
@@ -12,7 +14,7 @@
                 Delete
             </div>
         </div>
-        <form class="clp flx box col g-1"
+        <form class="clp-box flx box col g-1"
             hx-put="/api/v1/channels/twitch:<%= channel.id %>"
             hx-swap="none">
             <div class="flx row g-1">
