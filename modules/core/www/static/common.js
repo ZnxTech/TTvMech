@@ -1,17 +1,14 @@
 const message_element = document.getElementById("message");
 
 function sendMessage(prefix, message, classes) {
-	is_message_vis = true;
 	message_element.innerText = `${prefix} ${message}`;
 	message_element.className = `box tx-b ${classes.join(" ")}`;
 	message_countdown = 5000;
 }
 
 function hideMessage() {
-	if (is_message_vis) {
-		message_element.className = "box tx-b";
-		is_message_vis = false;
-	}
+    message_element.className = "box tx-b";
+    is_message_vis = false;
 }
 
 let message_countdown = -1;
