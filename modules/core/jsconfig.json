@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"lib": ["DOM"],
+		"target": "esnext",
+		"module": "commonjs"
+	},
+	"include": ["www/**/*.js"]
+}
