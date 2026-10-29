@@ -490,7 +490,7 @@ export namespace API.V1 {
 			const query = Z.object({
 				code: Z.string(),
 				scope: Z.string(),
-				state: Z.string().optional(),
+				state: Z.string(),
 			}).safeParse(req.query);
 
 			if (!query.success) {
@@ -504,6 +504,17 @@ export namespace API.V1 {
 					error: "bot",
 					type: "twitch",
 					message: error.success ? error.data.error_description : undefined,
+				});
+
+				return res.redirect(307, `/bots?${query_str}`);
+			}
+
+			const session = res.locals.session as Auth.Session | undefined;
+			if (!session || !Auth.validateCSRF(session.id, query.data.state)) {
+				const query_str = Qs.stringify({
+					error: "bot",
+					type: "csrf",
+					message: "CSRF token doesnt exist or doesnt match session id.",
 				});
 
 				return res.redirect(307, `/bots?${query_str}`);
