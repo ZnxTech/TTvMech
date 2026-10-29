@@ -30,6 +30,11 @@ export namespace API.V1 {
 		}).safeParse(req.body);
 
 		if (!body.success) {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(400).send("Invalid request body.");
 		}
 
@@ -65,6 +70,11 @@ export namespace API.V1 {
 			}).safeParse(req.body);
 
 			if (!body.success) {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(400).send("Invalid request body.");
 			}
 
@@ -73,7 +83,12 @@ export namespace API.V1 {
 
 			Auth.createUser(body.data.user_name, body.data.user_pass, req_admin, req_super_admin);
 
-			res.appendHeader("HX-Trigger", "ttv:reloadUsers");
+			const triggers = JSON.stringify({
+				"ttv:reloadUsers": null,
+				"ttv:sendMessage": { level: "info", message: "Account created successfully!" },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			res.sendStatus(200);
 		});
 
@@ -85,6 +100,11 @@ export namespace API.V1 {
 			}).safeParse(req.body);
 
 			if (!body.success) {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(400).send("Invalid request body.");
 			}
 
@@ -100,6 +120,11 @@ export namespace API.V1 {
 				res.appendHeader("HX-Redirect", "/dashboard");
 				res.sendStatus(200);
 			} catch {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid username or password." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				res.status(403).send("Invalid username or password.");
 			}
 		})
@@ -171,6 +196,11 @@ export namespace API.V1 {
 
 				if (super_admin_count <= 1) {
 					// Exit deletion to prevent softlock.
+					const triggers = JSON.stringify({
+						"ttv:sendMessage": { level: "warn", message: "Can not delete last remaining Super-Admin." },
+					});
+
+					res.appendHeader("HX-Trigger", triggers);
 					return res.status(400).send("Can not delete last remaining Super-Admin.");
 				}
 			}
@@ -181,7 +211,12 @@ export namespace API.V1 {
 				// Loosely compare
 				res.status(400).send("Invalid user UUID.");
 			} else {
-				res.appendHeader("HX-Trigger", "ttv:reloadUsers");
+				const triggers = JSON.stringify({
+					"ttv:reloadUsers": null,
+					"ttv:sendMessage": { level: "info", message: "Account deleted successfully!" },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				res.sendStatus(200);
 			}
 		});
@@ -195,6 +230,11 @@ export namespace API.V1 {
 		}).safeParse(req.body);
 
 		if (!body.success) {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(400).send("Invalid request body.");
 		}
 
@@ -206,6 +246,12 @@ export namespace API.V1 {
 			mod_score: body.data.mod_score,
 			ban_score: body.data.ban_score,
 		});
+
+		const triggers = JSON.stringify({
+			"ttv:sendMessage": { level: "info", message: "Settings updated successfully!" },
+		});
+
+		res.appendHeader("HX-Trigger", triggers);
 		res.sendStatus(200);
 	});
 
@@ -220,6 +266,11 @@ export namespace API.V1 {
 		}
 
 		SettingsUtil.updateTwitchClient(body.data.client_id, body.data.client_secret);
+		const triggers = JSON.stringify({
+			"ttv:sendMessage": { level: "info", message: "Twitch client details updated successfully!" },
+		});
+
+		res.appendHeader("HX-Trigger", triggers);
 		res.sendStatus(200);
 	});
 
@@ -234,6 +285,11 @@ export namespace API.V1 {
 		}).safeParse(req.body);
 
 		if (!body.success) {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(400).send("Invalid request body.");
 		}
 
@@ -251,11 +307,21 @@ export namespace API.V1 {
 				})
 				.run();
 		} catch {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "warn", message: "A command with this trigger already exists." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(400).send("A command with this trigger already exists.");
 		}
 
 		manager.addCommand({ ...body.data, active: true });
-		res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+		const triggers = JSON.stringify({
+			"ttv:reloadCommands": null,
+			"ttv:sendMessage": { level: "info", message: "Command created successfully!" },
+		});
+
+		res.appendHeader("HX-Trigger", triggers);
 		res.sendStatus(200);
 	});
 
@@ -277,7 +343,12 @@ export namespace API.V1 {
 			const sql_res = db.update(tables.commands).set(body.data).where(eq(tables.commands.trigger, trigger)).run();
 			manager.editCommand(trigger, body.data);
 
-			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+			const triggers = JSON.stringify({
+				"ttv:reloadCommands": null,
+				"ttv:sendMessage": { level: "info", message: "Command edited successfully!" },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			res.sendStatus(200);
 		})
 		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
@@ -286,7 +357,13 @@ export namespace API.V1 {
 			const sql_res = db.delete(tables.commands).where(eq(tables.commands.trigger, trigger)).run();
 
 			manager.removeCommand(trigger);
-			res.appendHeader("HX-Trigger", "ttv:reloadCommands");
+
+			const triggers = JSON.stringify({
+				"ttv:reloadCommands": null,
+				"ttv:sendMessage": { level: "info", message: "Command deleted successfully!" },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			res.sendStatus(200);
 		});
 
@@ -329,6 +406,11 @@ export namespace API.V1 {
 		}).safeParse(req.body);
 
 		if (!body.success) {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(400).send("Invalid request body.");
 		}
 
@@ -348,10 +430,20 @@ export namespace API.V1 {
 					break;
 			}
 		} catch {
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "err", message: "Could not create channel." },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			return res.status(500).send("Could not create channel.");
 		}
 
-		res.appendHeader("HX-Trigger", "ttv:reloadChannels");
+		const triggers = JSON.stringify({
+			"ttv:reloadChannels": null,
+			"ttv:sendMessage": { level: "info", message: "Channel created successfully!" },
+		});
+
+		res.appendHeader("HX-Trigger", triggers);
 		res.sendStatus(200);
 	});
 
@@ -414,6 +506,11 @@ export namespace API.V1 {
 			}).safeParse(req.body);
 
 			if (!body.success) {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(400).send("Invalid request body.");
 			}
 
@@ -422,6 +519,11 @@ export namespace API.V1 {
 			const offline_only = body.data.offline_only === "on";
 
 			if (!channel_origin || !channel_origin_id) {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(400).send("Invalid request body.");
 			}
 
@@ -438,15 +540,30 @@ export namespace API.V1 {
 						break;
 				}
 			} catch {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Could not edit channel." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(500).send("Could not edit channel.");
 			}
 
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "info", message: "Channel edited successfully!" },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			res.sendStatus(200);
 		})
 		.delete(Auth.middleSessionAuth(true, false), (req, res) => {
 			const [channel_origin, channel_origin_id] = req.params.channel_origin_id.split(":");
 
 			if (!channel_origin || !channel_origin_id) {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid request body." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(400).send("Invalid request body.");
 			}
 
@@ -463,9 +580,19 @@ export namespace API.V1 {
 						break;
 				}
 			} catch {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Could not delete channel." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				return res.status(500).send("Could not delete channel.");
 			}
 
+			const triggers = JSON.stringify({
+				"ttv:sendMessage": { level: "info", message: "Channel deleted successfully!" },
+			});
+
+			res.appendHeader("HX-Trigger", triggers);
 			res.sendStatus(200);
 		});
 
@@ -657,8 +784,18 @@ export namespace API.V1 {
 
 			if (sql_res.changes == 0) {
 				// Loosely compare
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "err", message: "Invalid bot Twitch id." },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				res.status(400).send("Invalid bot Twitch id.");
 			} else {
+				const triggers = JSON.stringify({
+					"ttv:sendMessage": { level: "info", message: "Twitch bot deleted successfully!" },
+				});
+
+				res.appendHeader("HX-Trigger", triggers);
 				res.sendStatus(200);
 			}
 		});
