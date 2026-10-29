@@ -7,8 +7,8 @@ function sendMessage(prefix, message, classes) {
 }
 
 function hideMessage() {
-    message_element.className = "box tx-b";
-    is_message_vis = false;
+	message_element.className = "box tx-b";
+	is_message_vis = false;
 }
 
 let message_countdown = -1;

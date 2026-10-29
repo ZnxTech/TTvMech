@@ -57,17 +57,8 @@ export namespace Util {
 			.run();
 	}
 
-	export function update(opt: {
-		cmd_prefix?: string;
-		root_path?: string;
-		mod_score?: number;
-		ban_score?: number;
-	}) {
-		const _ = db
-			.update(tables.settings)
-			.set(opt)
-			.where(eq(tables.settings.id, 0))
-			.run();
+	export function update(opt: { cmd_prefix?: string; root_path?: string; mod_score?: number; ban_score?: number }) {
+		const _ = db.update(tables.settings).set(opt).where(eq(tables.settings.id, 0)).run();
 	}
 
 	export function setInitialized() {
