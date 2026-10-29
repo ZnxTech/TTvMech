@@ -499,6 +499,16 @@ export class TwitchBot {
 		}
 	}
 
+	public async partAll(): Promise<boolean> {
+		const promises = this.joins
+			.keys()
+			.toArray()
+			.map((channel_id) => this.part(channel_id));
+
+		const parts = await Promise.all(promises);
+		return parts.every((part) => part);
+	}
+
 	public getPluginBot(): PluginBot {
 		return {
 			origin_id: this.twitch_id,

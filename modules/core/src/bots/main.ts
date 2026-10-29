@@ -348,6 +348,12 @@ export class Manager {
 	}
 
 	public removeTwitchBot(twitch_id: string) {
+		const twitch_bot = this.twitch_bots.get(twitch_id);
+
+		if (twitch_bot) {
+			twitch_bot.partAll();
+		}
+
 		this.twitch_bots.delete(twitch_id);
 	}
 
