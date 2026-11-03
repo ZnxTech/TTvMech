@@ -5,7 +5,7 @@ export const table_defaults = {
 		root_path: "/",
 		mod_score: 999,
 		ban_score: 0,
-		cmd_prefix: "1",
+		cmd_prefix: "!",
 	},
 };
 
