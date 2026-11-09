@@ -1,15 +1,15 @@
-<a class="btn tx-b" href="/dashboard">/dashboard</a>
-<a class="btn tx-b" href="/manual">/manual</a>
+<div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/dashboard" hx-get="/htmx/v1/route/dashboard">/dashboard</div>
+<div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/manual" hx-get="/htmx/v1/route/manual">/manual</div>
 <% if (session) { %>
     <% if (session.is_admin) { %>
-        <a class="btn tx-b" href="/commands">/commands</a>
-        <a class="btn tx-b" href="/plugins">/plugins</a>
-        <a class="btn tx-b" href="/channels">/channels</a>
-        <a class="btn tx-b" href="/bots">/bots</a>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/commands" hx-get="/htmx/v1/route/commands">/commands</div>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/plugins" hx-get="/htmx/v1/route/plugins">/plugins</div>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/channels" hx-get="/htmx/v1/route/channels">/channels</div>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/bots" hx-get="/htmx/v1/route/bots">/bots</div>
     <% } %>
     <% if (session.is_super_admin) { %>
-        <a class="btn tx-b" href="/settings">/settings</a>
-        <a class="btn tx-b" href="/users">/users</a>
-        <a class="btn tx-b" href="/system">/system</a>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/settings" hx-get="/htmx/v1/route/settings">/settings</div>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/users" hx-get="/htmx/v1/route/users">/users</div>
+        <div class="btn tx-b" hx-trigger="click" hx-target="#subroot" hx-swap="innerHtml" hx-replace-url="/system" hx-get="/htmx/v1/route/system">/system</div>
     <% } %>
 <% } %>

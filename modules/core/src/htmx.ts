@@ -1,3 +1,5 @@
+import NodePath from "node:path";
+
 import { eq } from "drizzle-orm";
 import Express from "express";
 import Z from "zod";
@@ -8,6 +10,29 @@ import { tables } from "./db/schema.js";
 
 export namespace HTMX.V1 {
 	export const ROUTER = Express.Router();
+
+	ROUTER.route("/route/:route").get((req, res) => {
+		const session = res.locals.session as Auth.Session | undefined;
+		const route = req.params.route;
+
+		const resolved_path = NodePath.resolve("www/views/routes", `${route}.ejs`);
+		const absolute_path = NodePath.resolve("www/views/routes");
+
+		if (!resolved_path.startsWith(absolute_path)) {
+			// User somehow requested a view file outside of routes.
+			const error = `Could not retrive endpoint "/htmx/v1/route/${route}"`;
+			res.render("elements/error.ejs", { error: error });
+		}
+
+		res.render(`routes/${route}.ejs`, { session: session }, (err, html) => {
+			if (err) {
+				const error = `Could not retrive endpoint "/htmx/v1/route/${route}"`;
+				res.render("elements/error.ejs", { error: error });
+			} else {
+				res.send(html);
+			}
+		});
+	});
 
 	ROUTER.route("/manual").get((req, res) => {
 		const settings = db
